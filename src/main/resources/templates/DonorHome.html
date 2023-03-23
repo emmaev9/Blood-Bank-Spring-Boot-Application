@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <title>Home</title>
+</head>
+<body>
+<h1 class="continer text-center">   Donor home </h1>
+<br>
+<br>
+<div>
+    <a class="btn btn-primary btn-lg" th:href="@{/EditDonorProfile}">Edit account</a>
+    <a th:href="@{/deleteDonor}" class="btn btn-danger ml-2">Delete account</a>
+
+    <a class="btn btn-danger ml-2" href="#" th:href="@{/logout}">Log Out</a>
+</div>
+<div class="container text-center">
+
+    <div>
+        <h1>Possible donation centers</h1>
+    </div>
+
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Functional</th>
+                <th>Schedule(M-F)</th>
+                <th>Donations/Day</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="l: ${locations}">
+                <td th:text="${l.id}"></td>
+                <td th:text="${l.name}"></td>
+                <td th:text="${l.functional}"></td>
+                <td th:text="${l.schedule}"></td>
+                <td th:text="${l.maximumDonations}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<a th:href="@{/createAppoitment}" class="btn btn-danger ml-2">Create appoitment</a>
+
+<div class="container text-center">
+
+    <div>
+        <h1>Appointments</h1>
+    </div>
+
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Donation Center</th>
+                <th>Date</th>
+                <th>Confirmed</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a: ${appoitmentList}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${a.donationCenter.name}"></td>
+                <td th:text="${a.date}"></td>
+                <th th:text="${a.confirmed}"></th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+</body>
+</html>

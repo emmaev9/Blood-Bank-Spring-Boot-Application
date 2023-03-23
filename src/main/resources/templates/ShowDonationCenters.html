@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <title>Home</title>
+</head>
+<body>
+<div class="container text-center">
+
+    <div>
+        <h1>List of Locations</h1>
+    </div>
+
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Functionality</th>
+                <th>Schedule(M-F)</th>
+                <th>Number of donations</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="location: ${locations}">
+                <td th:text="${location.id}"></td>
+                <td th:text="${location.name}"></td>
+                <td th:text="${location.functionality}"></td>
+                <td th:text="${location.schedule}"></td>
+                <td th:text="${location.maximumDonations}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
