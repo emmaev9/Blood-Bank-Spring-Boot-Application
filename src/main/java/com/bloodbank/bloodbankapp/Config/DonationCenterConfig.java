@@ -1,4 +1,4 @@
-/*package com.bloodbank.bloodbankapp.Config;
+package com.bloodbank.bloodbankapp.Config;
 
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Repository.DonationCenterRepository;
@@ -69,4 +69,4 @@ public class DonationCenterConfig {
             repo.saveAll(List.of(donationCenter1,donationCenter2,donationCenter3, donationCenter4, donationCenter5));
         };
     }
-}*/
+}
