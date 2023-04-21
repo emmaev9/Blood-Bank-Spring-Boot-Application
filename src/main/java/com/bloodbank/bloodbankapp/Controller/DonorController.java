@@ -1,32 +1,23 @@
 package com.bloodbank.bloodbankapp.Controller;
 
-import com.bloodbank.bloodbankapp.Entity.Appoitment;
+import com.bloodbank.bloodbankapp.DTO.DonorDTO;
+import com.bloodbank.bloodbankapp.DTO.Response.MessageResponse;
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Entity.Donor;
-import com.bloodbank.bloodbankapp.Entity.User;
-import com.bloodbank.bloodbankapp.DTO.AppoitmentDTO;
+import com.bloodbank.bloodbankapp.Mapper.DonorMapper;
 import com.bloodbank.bloodbankapp.Service.AppoitmentService;
 import com.bloodbank.bloodbankapp.Service.DonationCenterService;
 import com.bloodbank.bloodbankapp.Service.DonorService;
 import com.bloodbank.bloodbankapp.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.transaction.Transactional;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-@Controller
+@CrossOrigin(origins = "http://localhost:8081")
+@RestController
+@RequestMapping("/api/donor/")
 public class DonorController {
 
     @Autowired
@@ -41,131 +32,53 @@ public class DonorController {
     @Autowired
     AppoitmentService appoitmentService;
 
+    @Autowired
+    PasswordEncoder encoder;
 
-    @GetMapping("/DonorHome")
-    public ModelAndView donorHomePage(){
-        Donor donor = donorService.findDonorByUsername(getUsername());
-        ModelAndView mav = new ModelAndView("DonorHome");
-        List<Appoitment> appoitmentList = appoitmentService.findUserAppoitments(donorService.findDonorByUsername(getUsername()));
-        List<DonationCenter> donationCenterList = donationCenterService.findAllDonationCentersInCounty(donor.getCounty());
-        System.out.println(appoitmentList);
-        mav.addObject("locations", donationCenterList);
-        mav.addObject("appoitmentList", appoitmentList);
-        return mav;
+    @Autowired
+    DonorMapper donorMapper;
+
+    @GetMapping("/donorHome")
+    public String donorHomePage(){
+        return "donorHome";
     }
 
-    @GetMapping("/registerDonor")
-    public String showRegistrationForm(Model model){
-        Donor donor = new Donor();
-
-        model.addAttribute("donor", donor);
-        return "registerDonor";
+    @GetMapping("/donationCenters")
+    public ResponseEntity<?> getDonorCenters(@RequestParam String county){
+        List<DonationCenter> donationCenters = donationCenterService.findAllDonationCentersInCounty(county);
+        return ResponseEntity.ok(donationCenters);
     }
 
-    @PostMapping("/registerDonor")
-    public String registerDonor(@ModelAttribute Donor registeredDonor,
-                                BindingResult result,
-                                Model model){
-        User existingUser = userService.findUserByUsername(registeredDonor.getUsername());
-        if(existingUser != null && existingUser.getUsername()!=null){
-            result.rejectValue("username", "error with username",
-                    "There is already an account registered with the same username");
+    @GetMapping("/editDonorProfile")
+    public String editProfileForm(){
+        return "editProfile";
+    }
+
+    @PostMapping("/editDonorProfile")
+    public ResponseEntity<?> editProfileForm(@RequestBody DonorDTO updatedDonor){
+        Integer id = updatedDonor.getId();
+        if(userService.findUserByUsername(updatedDonor.getUsername()) != null
+                && userService.findUserById(id)!=userService.findUserByUsername(updatedDonor.getUsername()) ){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
         }
-
-        Donor newDonor = new Donor();
-        newDonor.setEmail(registeredDonor.getEmail());
-        newDonor.setFirstName(registeredDonor.getFirstName());
-        newDonor.setLastName(registeredDonor.getLastName());
-        newDonor.setPassword(registeredDonor.getPassword());
-        newDonor.setUsername(registeredDonor.getUsername());
-        newDonor.setBloodType(registeredDonor.getBloodType());
-        newDonor.setCounty(registeredDonor.getCounty());
-        System.out.println(newDonor.toString());
-        donorService.saveDonor(newDonor);
-        System.out.println(newDonor.toString());
-
-        return "login";
-    }
-
-    @GetMapping("/EditDonorProfile")
-    public String editProfileForm(Model model){
-        Donor donor = donorService.findDonorByUsername(getUsername());
-        model.addAttribute("donor", donor);
-        return "/EditDonorProfile";
-    }
-
-    @PostMapping("/EditDonorProfile")
-    public String editProfile(@ModelAttribute Donor registeredDonor,
-                                BindingResult result,
-                                Model model){
-        User existingUser = userService.findUserByUsername(registeredDonor.getUsername());
-        if(existingUser != null && existingUser.getUsername()!=null){
-            result.rejectValue("username", "error with username",
-                    "There is already an account registered with the same username");
+        if(userService.findUserByEmail(updatedDonor.getEmail()) != null
+                && userService.findUserById(id)!=userService.findUserByEmail(updatedDonor.getEmail()) ){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already taken!"));
         }
-
-        Donor newDonor = new Donor();
-        newDonor.setEmail(registeredDonor.getEmail());
-        newDonor.setFirstName(registeredDonor.getFirstName());
-        newDonor.setLastName(registeredDonor.getLastName());
-        if(registeredDonor.getPassword()!= null) {
-            newDonor.setPassword(registeredDonor.getPassword());
-        }
-        newDonor.setUsername(registeredDonor.getUsername());
-        newDonor.setBloodType(registeredDonor.getBloodType());
-        newDonor.setCounty(registeredDonor.getCounty());
-        donorService.updateDonor(newDonor);
-        return "redirect:/DonorHome";
+        Donor donor = donorMapper.donorDTOToModel(updatedDonor);
+        donor.setPassword(encoder.encode(updatedDonor.getPassword()));
+        donorService.updateDonor(donor);
+        return ResponseEntity.ok(new MessageResponse("Profile updated!"));
     }
 
-    @GetMapping("/deleteDonor")
-    public String deleteDonor() {
-        Donor currentDonor = donorService.findDonorByUsername(getUsername());
-        appoitmentService.deleteUserAppoitments(currentDonor);
-        donorService.deleteDonorById(currentDonor.getId());
-        return "redirect:/login";
-    }
-    @GetMapping("/createAppoitment")
-    public String makeAppoitmentGet(Model model){
-
-        model.addAttribute("locations", donationCenterService.findAllDonationCentersInCounty(
-                donorService.findDonorByUsername(getUsername()).getCounty()));
-        AppoitmentDTO appoitmentDTO = new AppoitmentDTO();
-        model.addAttribute("appoitmentDto", appoitmentDTO);
-        return "createAppoitment";
-    }
-
-    @PostMapping("/createAppoitment")
-    public String makeAppoitment(@ModelAttribute AppoitmentDTO appoitment){
-        Appoitment newAppoitment = new Appoitment();
-
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            Date date = formatter.parse(appoitment.getDate());
-            newAppoitment.setDate(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        newAppoitment.setDonor(donorService.findDonorByUsername(getUsername()));
-        newAppoitment.setDonationCenter(donationCenterService.findDonationCenterByName(appoitment.getLocation()));
-        newAppoitment.setConfirmed(false);
-        System.out.println("Location: " + donationCenterService.findDonationCenterByName(appoitment.getLocation()).getName());
-        System.out.println("Date: " + appoitment.getDate());
-        appoitmentService.saveAppoitment(newAppoitment);
-        return "redirect:/DonorHome";
-    }
-
-
-    public String getUsername(){
-        String username = "";
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username  = principal.toString();
-        }
-        return username;
+    @DeleteMapping("/deleteDonor{username}")
+    public ResponseEntity<?> deleteDonor(@PathVariable String username) {
+        appoitmentService.deleteUserAppoitments(donorService.findDonorByUsername(username));
+        donorService.deleteDonorById(donorService.findDonorByUsername(username).getId());
+        return ResponseEntity.ok(new MessageResponse("Account deleted!"));
     }
 }

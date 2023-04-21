@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -18,23 +20,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final User user = userRepository.findUserByUsername(username);
-
         if (user != null) {
-
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(user.getUsername())
-                    .password(user.getPassword())
-                    .authorities(getAuthorities(user))
-                    .build();
+            return UserDetailsImpl.build(user);
         } else {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-    }
-
-    public GrantedAuthority getAuthorities(User user) {
-        return new SimpleGrantedAuthority(user.getRoleName());
     }
 }
 

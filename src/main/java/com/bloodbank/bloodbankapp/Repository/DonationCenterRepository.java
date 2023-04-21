@@ -9,9 +9,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DonationCenterRepository extends JpaRepository<DonationCenter, Integer> {
-    @Query("SELECT d FROM DonationCenter d WHERE d.name = :name")
-    DonationCenter findDonationCenterByName(@Param("name") String name);
+    DonationCenter findDonationCenterByName(String name);
+    List<DonationCenter> findAll();
+    boolean existsByName(String name);
+    boolean existsByCity(String name);
+    boolean existsById(Integer id);
+    DonationCenter findDonationCenterById(Integer id);
 
     @Query("SELECT d FROM DonationCenter d WHERE d.county = :county")
     List<DonationCenter> findAllDonationCentersInCounty(@Param("county") String county);
+
+
+
 }

@@ -3,6 +3,7 @@ package com.bloodbank.bloodbankapp.Entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "doctor")
 public class Doctor extends User {
 
     @OneToOne

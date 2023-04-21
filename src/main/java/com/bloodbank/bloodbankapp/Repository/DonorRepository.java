@@ -11,17 +11,24 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DonorRepository  extends JpaRepository<Donor, Integer> {
-    @Query("SELECT u FROM Donor u WHERE u.username = :username")
+
     Donor findDonorByUsername(@Param("username") String username);
 
     @Modifying
     @Query("UPDATE Donor d " +
-            "set d.email = :email, d.county = :county, d.lastName = :lastname, d.firstName = :firstname" +
+            "set d.email = :email, " +
+            "    d.county = :county, " +
+            "    d.lastName = :lastname, " +
+            "    d.firstName = :firstname," +
+            "    d.password = :password," +
+            "    d.bloodType = :bloodType," +
+            "    d.username = :username" +
             "  where d.id = :donorId")
     void updateDonor(@Param("donorId") Integer donorId,@Param("firstname")String firstName, @Param("lastname")String lastname,
-                      @Param("email") String email, @Param("county") String county);
+                      @Param("email") String email, @Param("county") String county, @Param("password") String password,
+                     @Param("username") String username, @Param("bloodType") String bloodType);
 
-    @Query("SELECT u FROM Donor u WHERE u.id = :id")
+
     Donor findDonorById(@Param("id") Integer id);
 
 }

@@ -1,34 +1,27 @@
 package com.bloodbank.bloodbankapp.Entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
+@Table(name="roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User uses;
-
-    public Role(String name){
-        this.name = name;
+    public Role(ERole eRole){
+        this.name = eRole;
     }
 
-    public Role(){}
-
-    public User getUser() {
-        return uses;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

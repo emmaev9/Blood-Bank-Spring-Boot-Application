@@ -1,16 +1,17 @@
 package com.bloodbank.bloodbankapp.Service;
 
-import com.bloodbank.bloodbankapp.Entity.Doctor;
-import com.bloodbank.bloodbankapp.Entity.DonationCenter;
-import com.bloodbank.bloodbankapp.Entity.Role;
+import com.bloodbank.bloodbankapp.DTO.DoctorDTO;
+import com.bloodbank.bloodbankapp.Entity.*;
+import com.bloodbank.bloodbankapp.Repository.AppoitmentRepository;
 import com.bloodbank.bloodbankapp.Repository.DoctorRepository;
-import com.bloodbank.bloodbankapp.Repository.RoleRepository;
+import com.bloodbank.bloodbankapp.Repository.DonationCenterRepository;
 import com.bloodbank.bloodbankapp.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class DoctorService {
@@ -21,21 +22,18 @@ public class DoctorService {
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private AppoitmentRepository appoitmentRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RoleService roleService;
+
+    @Autowired
+    private DonationCenterRepository donationCenterRepository;
 
     public void saveDoctor(Doctor doctor){
-        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
-        if(roleRepository.findRole("ROLE_DOCTOR")==null){
-            Role role = new Role("ROLE_DOCTOR");
-            roleRepository.save(role);
-            doctor.setRole(role);
-        }
-        else{
-            doctor.setRole(roleRepository.findRole("ROLE_DOCTOR"));
-        }
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(roleService.findRoleByName(ERole.DOCTOR));
+        doctor.setRoles(roleSet);
         doctorRepository.save(doctor);
     }
 
@@ -54,15 +52,46 @@ public class DoctorService {
         return doctorRepository.findAll();
     }
 
-    public Doctor findDoctorByName(String firstname, String lastname){
-        return doctorRepository.findDoctorByName(firstname, lastname);
-    }
     public Doctor findDoctorByUsername(String username){
         return doctorRepository.findDoctorByUsername(username);
     }
 
-    public void updateDoctor(String username, String firstName, String lastName, String email, String CNP, DonationCenter donationCenter ){
-        doctorRepository.updateDoctor(username,firstName,lastName,email,CNP, donationCenter);
+    @Transactional
+    public void updateDoctor(DoctorDTO updatedDoctor){
+
+        doctorRepository.updateDoctor(
+                updatedDoctor.getId(),
+                updatedDoctor.getUsername(),
+                updatedDoctor.getFirstName(),
+                updatedDoctor.getLastName(),
+                updatedDoctor.getEmail(),
+                updatedDoctor.getCnp(),
+                donationCenterRepository.findDonationCenterByName(updatedDoctor.getLocation().getName()));
+    }
+    public boolean existsByUsername(String username) {
+        return doctorRepository.existsByUsername(username);
+    }
+
+    public Doctor findDoctorWithMinAppointments(){
+        List<Doctor> doctorList = findAllDoctors();
+        if(doctorList.isEmpty()){
+            return null;
+        }
+        if(doctorList.size() == 1){
+            return doctorList.get(0);
+        }
+        Map.Entry<Doctor,Integer> min = null;
+        Map<Doctor, Integer> doctorsAndNumberOfAppointments = new HashMap<>();
+        for(Doctor doctor: doctorList){
+            List<Appoitment> appoitments = appoitmentRepository.getAppoitmentByDoctor(doctor);
+            doctorsAndNumberOfAppointments.put(doctor, appoitments.size());
+        }
+        for (Map.Entry<Doctor, Integer> entry : doctorsAndNumberOfAppointments.entrySet()) {
+            if (min == null || min.getValue() > entry.getValue()) {
+                min = entry;
+            }
+        }
+        return min.getKey();
     }
 
 

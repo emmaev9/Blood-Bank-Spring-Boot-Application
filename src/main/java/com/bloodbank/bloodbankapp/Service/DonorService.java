@@ -1,16 +1,17 @@
 package com.bloodbank.bloodbankapp.Service;
 
 import com.bloodbank.bloodbankapp.Entity.Donor;
+import com.bloodbank.bloodbankapp.Entity.ERole;
 import com.bloodbank.bloodbankapp.Entity.Role;
 import com.bloodbank.bloodbankapp.Repository.DonorRepository;
-import com.bloodbank.bloodbankapp.Repository.RoleRepository;
 import com.bloodbank.bloodbankapp.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DonorService {
@@ -18,29 +19,19 @@ public class DonorService {
     private DonorRepository donorRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private RoleService roleService;
 
     @Autowired
     private UserRepository userRepository;
 
     public List<Donor> findAllDonors(){
-        List<Donor> donors = donorRepository.findAll();
-        return donors;
+        return donorRepository.findAll();
     }
 
     public void saveDonor(Donor donor){
-        donor.setPassword(passwordEncoder.encode(donor.getPassword()));
-        if(roleRepository.findRole("ROLE_USER")==null){
-            Role role = new Role("ROLE_USER");
-            roleRepository.save(role);
-            donor.setRole(role);
-        }
-        else{
-            donor.setRole(roleRepository.findRole("ROLE_USER"));
-        }
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(roleService.findRoleByName(ERole.DONOR));
+        donor.setRoles(roleSet);
         donorRepository.save(donor);
     }
 
@@ -55,8 +46,10 @@ public class DonorService {
     @Transactional
     public void updateDonor(Donor updatedDonor){
          donorRepository.updateDonor(donorRepository.findDonorByUsername(updatedDonor.getUsername()).getId(),
-                                            updatedDonor.getFirstName(), updatedDonor.getLastName(),
-                                          updatedDonor.getEmail(), updatedDonor.getCounty());
+                                          updatedDonor.getFirstName(), updatedDonor.getLastName(),
+                                          updatedDonor.getEmail(), updatedDonor.getCounty(),
+                                          updatedDonor.getPassword(), updatedDonor.getUsername(),
+                                          updatedDonor.getBloodType());
     }
     public void deleteDonor(Donor donor){
         donorRepository.delete(donor);

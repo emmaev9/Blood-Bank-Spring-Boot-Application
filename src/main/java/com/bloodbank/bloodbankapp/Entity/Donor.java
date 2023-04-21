@@ -3,11 +3,11 @@ package com.bloodbank.bloodbankapp.Entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "donor")
 public class Donor extends User{
-
-    @Column(nullable = false)
     private String bloodType;
 
+    @Column(nullable = false)
     private String county;
 
     //Constructors
@@ -51,4 +51,5 @@ public class Donor extends User{
                 ", county='" + county + '\'' +
                 '}';
     }
+
 }

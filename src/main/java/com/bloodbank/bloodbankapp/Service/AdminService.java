@@ -1,12 +1,15 @@
 package com.bloodbank.bloodbankapp.Service;
 
 import com.bloodbank.bloodbankapp.Entity.Admin;
+import com.bloodbank.bloodbankapp.Entity.ERole;
 import com.bloodbank.bloodbankapp.Entity.Role;
 import com.bloodbank.bloodbankapp.Repository.AdminRepository;
-import com.bloodbank.bloodbankapp.Repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class AdminService {
@@ -17,21 +20,22 @@ public class AdminService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleService roleService;
+
     public Admin findAdminByUsername(String username){
         return adminRepository.findUserByUsername(username);
     }
 
+    public boolean existsAdmin(Admin admin){
+        return adminRepository.existsByUsername(admin.getUsername());
+    }
+
     public void saveAdmin(Admin admin){
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-        if(roleRepository.findRole("ROLE_ADMIN")==null){
-            Role role = new Role("ROLE_ADMIN");
-            roleRepository.save(role);
-            admin.setRole(role);
-        }
-        else{
-            admin.setRole(roleRepository.findRole("ROLE_ADMIN"));
-        }
+        Set<Role> roleSet = new HashSet<>();
+        Role adminRole = roleService.findRoleByName(ERole.ADMIN);
+        roleSet.add(adminRole);
+        admin.setRoles(roleSet);
         adminRepository.save(admin);
     }
 

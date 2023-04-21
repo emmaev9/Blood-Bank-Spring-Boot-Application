@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "donationcenter")
 public class DonationCenter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +46,6 @@ public class DonationCenter {
     }
 
     // Getters and setters
-
 
     public String getCounty() {
         return county;

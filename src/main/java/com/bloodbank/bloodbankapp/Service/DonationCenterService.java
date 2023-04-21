@@ -16,7 +16,7 @@ public class DonationCenterService {
         donationCenterRepository.save(donationCenter);
     }
 
-    public List<DonationCenter> findAllDonationCenters(DonationCenter donationCenter){
+    public List<DonationCenter> findAllDonationCenters(){
         List<DonationCenter> centers = donationCenterRepository.findAll();
         return centers;
     }
@@ -27,5 +27,9 @@ public class DonationCenterService {
 
     public List<DonationCenter> findAllDonationCentersInCounty(String county){
         return donationCenterRepository.findAllDonationCentersInCounty(county);
+    }
+
+    public DonationCenter findDonationCenterById(Integer id){
+        return donationCenterRepository.findDonationCenterById(id);
     }
 }

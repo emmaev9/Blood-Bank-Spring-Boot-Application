@@ -7,12 +7,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoctorDTO {
+public class DoctorEditDTO {
+    @NonNull
+    private Integer id;
+    @NonNull
     private String cnp;
     @NonNull
     private DonationCenter location;
-    @NonNull
-    private Integer id;
     @NonNull
     private String firstName;
     @NonNull
@@ -21,6 +22,4 @@ public class DoctorDTO {
     private String username;
     @NonNull
     private String email;
-
-    private String password;
 }

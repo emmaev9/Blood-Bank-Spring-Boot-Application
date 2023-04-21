@@ -11,7 +11,7 @@ import java.util.List;
 @Configuration
 public class DonationCenterConfig {
     @Bean
-    CommandLineRunner commandLineRunner1(DonationCenterRepository repo){
+    CommandLineRunner commandLineRunner3(DonationCenterRepository repo){
         return args -> {
             DonationCenter donationCenter1 = new DonationCenter(
                     "Regina Maria Donation Center",
@@ -66,7 +66,12 @@ public class DonationCenterConfig {
                     60
             );
 
-            repo.saveAll(List.of(donationCenter1,donationCenter2,donationCenter3, donationCenter4, donationCenter5));
+            List<DonationCenter> centers =(List.of(donationCenter1,donationCenter2,donationCenter3, donationCenter4, donationCenter5));
+            for(DonationCenter c: centers){
+                if(!repo.existsByName(c.getName()) && !repo.existsByCity(c.getCity())){
+                    repo.save(c);
+                }
+            }
         };
     }
 }
