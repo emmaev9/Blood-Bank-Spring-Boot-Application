@@ -14,6 +14,7 @@ public interface DonationCenterRepository extends JpaRepository<DonationCenter, 
     boolean existsByName(String name);
     boolean existsByCity(String name);
     boolean existsById(Integer id);
+    boolean existsByCountyAndName(String county, String name);
     DonationCenter findDonationCenterById(Integer id);
 
     @Query("SELECT d FROM DonationCenter d WHERE d.county = :county")

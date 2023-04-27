@@ -65,7 +65,7 @@
                       <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
-                          <Dropdown v-model="this.currentDoctor.location" :options="this.locations" optionLabel="name"
+                          <Dropdown v-model="this.currentDoctor.location" :options="this.locations" optionLabel="label"
                             placeholder="Donation Center" class="location" name="location">
                           </Dropdown>
                           <ErrorMessage name="location" class="error-feedback" />
@@ -223,7 +223,7 @@ export default {
       }
     ),
 
-      DonationCenterService.getDonationCenters().then(
+      DonationCenterService.getDonationCentersWithLabels().then(
         (response) => {
           this.locations = response.data;
           console.log(this.locations)

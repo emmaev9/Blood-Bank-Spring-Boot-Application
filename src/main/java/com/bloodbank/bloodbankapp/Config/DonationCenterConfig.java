@@ -21,7 +21,7 @@ public class DonationCenterConfig {
                 "123",
                     true,
                     "8:00 - 16:00",
-                    50
+                    3
             );
             DonationCenter donationCenter2 = new DonationCenter(
                     "Synevo Donation Center",
@@ -31,7 +31,7 @@ public class DonationCenterConfig {
                     "59",
                     true,
                     "10:00-12:00",
-                    40
+                    7
             );
             DonationCenter donationCenter3 = new DonationCenter(
                     "Cardiomed Donation Center",
@@ -41,10 +41,20 @@ public class DonationCenterConfig {
                     "111A",
                     true,
                     "8:00 - 14:00",
-                    30
+                    5
+            );
+            DonationCenter donationCenter4 = new DonationCenter(
+                    "Cardiocad Donation Center",
+                    "Cluj",
+                    "Cluj-Napoca",
+                    "Popesci",
+                    "111A",
+                    true,
+                    "8:00 - 14:00",
+                    5
             );
 
-            DonationCenter donationCenter4 = new DonationCenter(
+            DonationCenter donationCenter5 = new DonationCenter(
                     "Alba Donation Center",
                     "Alba",
                     "Alba Iulia",
@@ -52,10 +62,10 @@ public class DonationCenterConfig {
                     "23",
                     true,
                     "8:00 - 14:00",
-                    30
+                    10
             );
 
-            DonationCenter donationCenter5 = new DonationCenter(
+            DonationCenter donationCenter6 = new DonationCenter(
                     "Donation Center X",
                     "Suceava",
                     "Suceava",
@@ -63,12 +73,12 @@ public class DonationCenterConfig {
                     "11",
                     true,
                     "8:00 - 12:00",
-                    60
+                    6
             );
 
-            List<DonationCenter> centers =(List.of(donationCenter1,donationCenter2,donationCenter3, donationCenter4, donationCenter5));
+            List<DonationCenter> centers =(List.of(donationCenter1,donationCenter2,donationCenter3, donationCenter4, donationCenter5, donationCenter6));
             for(DonationCenter c: centers){
-                if(!repo.existsByName(c.getName()) && !repo.existsByCity(c.getCity())){
+                if(!repo.existsByCountyAndName(c.getCounty(),c.getName())){
                     repo.save(c);
                 }
             }

@@ -1,5 +1,6 @@
 package com.bloodbank.bloodbankapp.Controller;
 
+import com.bloodbank.bloodbankapp.DTO.Request.DonationCenterRequestDTO;
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Service.DonationCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,20 @@ public class DonationCenterController {
     public ResponseEntity<?> getLocations(){
         List<DonationCenter> donationCenters = donationCenterService.findAllDonationCenters();
         return ResponseEntity.ok(donationCenters);
+    }
+    @GetMapping("/getDonationCentersWithLabel")
+    public ResponseEntity<?> getLoc(){
+        List<DonationCenter> donationCenters = donationCenterService.findAllDonationCenters();
+        List<DonationCenterRequestDTO> donationCenterRequestDTOS = new ArrayList<>();
+        for(DonationCenter d: donationCenters){
+            DonationCenterRequestDTO donationCenterRequestDTO = new DonationCenterRequestDTO();
+            donationCenterRequestDTO.setCity(d.getCity());
+            donationCenterRequestDTO.setCounty(d.getCounty());
+            donationCenterRequestDTO.setId(d.getId());
+            donationCenterRequestDTO.setName(d.getName());
+            donationCenterRequestDTO.setLabel(d.getName() + ", " + d.getCounty() + ", " + d.getCity());
+            donationCenterRequestDTOS.add(donationCenterRequestDTO);
+        }
+        return ResponseEntity.ok(donationCenterRequestDTOS);
     }
 }

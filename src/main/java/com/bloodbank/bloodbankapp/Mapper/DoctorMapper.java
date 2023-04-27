@@ -17,5 +17,17 @@ public class DoctorMapper {
         doctorDTO.setCnp(doctor.getCNP());
         return  doctorDTO;
     }
+    public Doctor doctorDTOtoModel(DoctorDTO doctorDTO){
+        Doctor doctor = new Doctor();
+        doctor.setUsername(doctorDTO.getUsername());
+        doctor.setEmail(doctorDTO.getEmail());
+        doctor.setDonationCenter(doctorDTO.getLocation());
+        doctor.setLastName(doctorDTO.getLastName());
+        doctor.setFirstName(doctorDTO.getFirstName());
+        doctor.setPassword(doctorDTO.getPassword());
+        doctor.setId(doctorDTO.getId());
+        doctor.setCNP(doctorDTO.getCnp());
+        return  doctor;
+    }
 
 }

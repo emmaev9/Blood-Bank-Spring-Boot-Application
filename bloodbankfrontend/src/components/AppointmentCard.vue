@@ -2,45 +2,49 @@
   <br>
   <div class="container text-center">
     <div v-if="message" class="alert alert-success">
-      {{message}}
+      {{ message }}
     </div>
     <Card style="width: 25em">
       <template #title> Make an appointment </template>
       <template #content>
+
         <form class="mx-1 mx-md-4" @submit="makeAppointment">
+          <div class="d-flex flex-row align-items-center mb-4">
+            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+            <div class="form-outline flex-fill mb-0">
+              <Dropdown v-model="this.selectedLocation" :options="locations" optionLabel="name" 
+                placeholder="Select a donation center" @change="chooseDonationCenter()">
+              </Dropdown>
+
+            </div>
+          </div>
+
           <div>
             <div class="d-flex flex-row align-items-center mb-4">
               <i class="fas fa-user fa-lg me-3 fa-fw"></i>
               <div class="form-outline flex-fill mb-0">
-                  
-                  <input v-model="date" 
-                         class="datepicker-input" 
-                         type="date" 
-                         name="date" 
-                         id="appointment_date"
-                         :min="new Date()"
-                         > 
-                 
-               
-              </div>
-            </div>
-            <div class="d-flex flex-row align-items-center mb-4">
-              <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-              <div class="form-outline flex-fill mb-0">
-                <Dropdown v-model="selectedLocation" :options="locations" optionLabel="name"
-                  placeholder="Select a donation center">
-                </Dropdown>
-              </div>
-            </div>
 
-            <div>
-              <button class="button">
-                Submit
-              </button>
+                <Calendar v-model='this.date' 
+                          dateFormat="yy/MM/dd" 
+                          placeholder="Select a date" 
+                          :minDate="disabledBefore"
+                          :maxDate="disabledAfter"
+                          :disabledDates="disabledDates"
+                          disabledDays="[0,6]"
+                          showIcon="true" />
+
+              </div>
             </div>
           </div>
+
+          <div>
+            <button class="btn btn-info btn-lg">
+              Submit
+            </button>
+          </div>
         </form>
-        </template>
+
+      </template>
     </Card>
   </div>
 </template>
@@ -48,35 +52,36 @@
 <script>
 import UserService from "../services/user.service";
 import AppointmentService from "../services/appointment";
-//import Calendar from 'primevue/calendar';
 import Dropdown from 'primevue/dropdown';
 import Card from 'primevue/card';
-//import Button from 'primevue/button';
+import Calendar from 'primevue/calendar';
 import "primevue/resources/primevue.min.css"; //core
 import "primeicons/primeicons.css"; //icons
-//import { Form } from "vee-validate";
 import "primevue/resources/themes/mira/theme.css";
-
-
 export default {
-  name: "AppointmentCard",  
+
+  name: "AppointmentCard",
   components: {
-   // Form,
     Dropdown,
     Card,
-   // Button
+    Calendar,
   },
   data() {
     return {
+
       successful: false,
       loading: false,
       locations: [],
       selectedLocation: "",
       date: "",
       message: "",
-      updateListOfAppointments:"",
-      today: new Date().toISOString().split("T")[0],
+      updateListOfAppointments: "flase",
+      disabledBefore: null,
+      disabledAfter: null,
+      datesToDisable: [],
+      disabledDates: []
     };
+
   },
   computed: {
     currentUser() {
@@ -86,21 +91,44 @@ export default {
   },
   methods: {
 
+    chooseDonationCenter() {
+      this.disabledDates = [];
+      AppointmentService.getNonAvailableAppointmentDates(this.selectedLocation.id).then(
+        (response) => {
+      
+          for (let i = 0; i < response.data.length; i++) {
+               this.disabledDates[i] = new Date(response.data[i]);
+          }
+          console.log(this.disabledDates);
+        },
+        (error) => {
+          this.content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+
     makeAppointment(appointment) {
-      console.log(this.today + " " + new Date());
+      // console.log(this.date);
       this.message = "";
       this.successful = false;
       this.loading = true;
       this.updateListOfAppointments = "true";
+      //this.date = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate() + 2);
+      let dateToSend = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate() + 2);
     
-      this.$emit('myevent',this.updateListOfAppointments);
+      this.$emit('myevent', this.updateListOfAppointments);
 
       this.updateListOfAppointments = "false";
 
       appointment.location = this.selectedLocation;
-      appointment.date = this.date;
+      appointment.date = dateToSend;
       appointment.username = this.currentUser.username;
-    
+
       AppointmentService.createAppointment(appointment)
         .then(
           () => {
@@ -123,6 +151,11 @@ export default {
   },
 
   created() {
+    this.disabledBefore = new Date();
+    let today = new Date();
+    this.disabledAfter = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 60);
+    
+
     UserService.getDonorDonationCenters(this.currentUser.county).then(
       (response) => {
         this.locations = response.data;

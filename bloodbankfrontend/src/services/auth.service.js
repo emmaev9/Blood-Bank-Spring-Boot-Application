@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api/auth/';
-const API_URL_ADMIN = 'http://localhost:8080/api/admin/';
+const API_URL_DOCTOR = 'http://localhost:8080/api/doctor/';
+
 
 
 class AuthService {
@@ -40,7 +41,7 @@ class AuthService {
   }
   registerDoctor(doctor){
     console.log(doctor);
-    return axios.post(API_URL_ADMIN + 'registerDoctor', {
+    return axios.post(API_URL_DOCTOR + 'registerDoctor', {
       username: doctor.username,
       email: doctor.email,
       password: doctor.password,

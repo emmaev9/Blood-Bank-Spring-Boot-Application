@@ -73,7 +73,7 @@
                       <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
-                          <Dropdown v-model="selectedLocation" :options="locations" optionLabel="name"
+                          <Dropdown v-model="selectedLocation" :options="locations" optionLabel="label"
                             placeholder="Select a donation center" name="location">
                           </Dropdown>
                           <ErrorMessage name="location" class="error-feedback" />
@@ -170,6 +170,10 @@ export default {
     };
   },
   methods: {
+    getOptionLabel() {
+      return this.locations.name;
+    },
+
     handleReg(user) {
       this.message = "";
       this.successful = false;
@@ -197,7 +201,7 @@ export default {
     },
   },
   created() {
-    DonationCenterService.getDonationCenters().then(
+    DonationCenterService.getDonationCentersWithLabels().then(
       (response) => {
         this.locations = response.data;
         //user.location = this.selLocation;

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api/appointment/';
+const API_URL_DOCTOR= 'http://localhost:8080/api/doctor/';
 
 class AppointmentService {
     createAppointment(appointment, locations) {
@@ -22,11 +23,23 @@ class AppointmentService {
        });
     }
 
+    getCurrentDayAppointments(username,date){
+      return axios.get(`${API_URL}getCurrentDayAppointments/${username}/${date}`);
+    }
+
+    getNonAvailableAppointmentDates(id){
+      return axios.get(`${API_URL}getNonAvailableDays/${id}`);
+    }
+
     deleteAppointment(id){
       return axios.delete(`${API_URL}deleteAppointment/${id}`);
     }
     confirmAppointment(id){
       return axios.put(`${API_URL}confirmAppointment/${id}`);
     }
+    pagination(pageNo){
+      return axios.get(`${API_URL_DOCTOR}page/${pageNo}`);
+    }
+
 }
 export default new AppointmentService(); 

@@ -38,6 +38,7 @@ public class Appoitment {
 
     private Date date;
 
+
     // Constructors
 
     public Appoitment(Donor donor, Doctor doctor, DonationCenter donationCenter, boolean confirmed, Date date) {
