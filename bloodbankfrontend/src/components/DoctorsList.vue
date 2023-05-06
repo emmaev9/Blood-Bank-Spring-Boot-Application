@@ -26,9 +26,9 @@
             <td> {{ item.lastName }}</td>
             <td> {{ item.location.name }}</td>
             <td>
-              <button @click="deleteSelectedDoctor(item.id)" class="btn btn-info">Delete</button>
+              <button @click="deleteSelectedDoctor(item.id)" class="button-33" role="button">Delete</button>
               
-              <button @click="updateSelectedDoctor(item.id)" class="btn btn-secondary">Update</button>
+              <button @click="updateSelectedDoctor(item.id)" class="button-222" role="button">Update</button>
             
             </td>
           </tr>
@@ -37,7 +37,7 @@
     </div>
   </div>
   <router-link to="/RegisterDoctor" class="nav-link">
-   <button>Add new doctor</button>
+   <button class="button-333" role="button">Add new doctor</button>
   </router-link>
   <br>
   <br>
@@ -100,6 +100,9 @@ export default {
 
 </script>
 <style>
+@import url(../assets/styles/submit_button.css);
+@import url(../assets/styles/cancel_button.css);
+@import url(../assets/styles/update_button.css);
 .title {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;

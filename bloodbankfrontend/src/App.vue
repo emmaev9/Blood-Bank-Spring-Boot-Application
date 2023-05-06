@@ -3,7 +3,7 @@
 
   </div>
  <div id="app">
-    <nav class="navbar navbar-expand" style="background-color:powderblue">
+    <nav class="navbar navbar-expand shadow" style="background-color:transparent;">
       
       <div v-if="!currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -62,6 +62,7 @@
 
 <script>
 
+
 export default {
   computed: {
     currentUser() {
@@ -105,5 +106,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.bg-img{
+  width: 100vh;
+  height: 100vw;
+  object-fit: contain;
+  filter: brightness(0.6);
+  top:0;
+  left:0;
+  z-index:-1;
+  position: absolute
 }
 </style>

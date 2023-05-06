@@ -6,6 +6,7 @@ import com.bloodbank.bloodbankapp.Repository.AppoitmentRepository;
 import com.bloodbank.bloodbankapp.Repository.DoctorRepository;
 import com.bloodbank.bloodbankapp.Repository.DonationCenterRepository;
 import com.bloodbank.bloodbankapp.Repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,31 +15,20 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class DoctorService {
-    @Autowired
-    private DoctorRepository doctorRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AppoitmentRepository appoitmentRepository;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private DonationCenterRepository donationCenterRepository;
+    private final DoctorRepository doctorRepository;
+    private final UserRepository userRepository;
+    private final AppoitmentRepository appoitmentRepository;
+    private final RoleService roleService;
+    private final DonationCenterRepository donationCenterRepository;
 
     public void saveDoctor(Doctor doctor){
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(roleService.findRoleByName(ERole.DOCTOR));
         doctor.setRoles(roleSet);
         doctorRepository.save(doctor);
-    }
-
-    public void deleteDoctorByUsername(String username){
-        userRepository.delete(userRepository.findUserByUsername(username));
     }
 
     public void deleteDoctorById(Integer id){
@@ -68,9 +58,6 @@ public class DoctorService {
                 updatedDoctor.getCnp(),
                 donationCenterRepository.findDonationCenterByName(updatedDoctor.getLocation().getName()));
     }
-    public boolean existsByUsername(String username) {
-        return doctorRepository.existsByUsername(username);
-    }
 
     public Doctor findDoctorWithMinAppointments(){
         List<Doctor> doctorList = findAllDoctors();
@@ -83,8 +70,8 @@ public class DoctorService {
         Map.Entry<Doctor,Integer> min = null;
         Map<Doctor, Integer> doctorsAndNumberOfAppointments = new HashMap<>();
         for(Doctor doctor: doctorList){
-            List<Appoitment> appoitments = appoitmentRepository.getAppoitmentByDoctor(doctor);
-            doctorsAndNumberOfAppointments.put(doctor, appoitments.size());
+            List<Appoitment> appointments = appoitmentRepository.getAppoitmentByDoctor(doctor);
+            doctorsAndNumberOfAppointments.put(doctor, appointments.size());
         }
         for (Map.Entry<Doctor, Integer> entry : doctorsAndNumberOfAppointments.entrySet()) {
             if (min == null || min.getValue() > entry.getValue()) {

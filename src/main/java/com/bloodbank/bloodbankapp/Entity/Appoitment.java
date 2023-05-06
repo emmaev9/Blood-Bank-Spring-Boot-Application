@@ -38,15 +38,18 @@ public class Appoitment {
 
     private Date date;
 
+    private String reminderType;
+
 
     // Constructors
 
-    public Appoitment(Donor donor, Doctor doctor, DonationCenter donationCenter, boolean confirmed, Date date) {
+    public Appoitment(Donor donor, Doctor doctor, DonationCenter donationCenter, boolean confirmed, Date date, String reminderType) {
         this.donor = donor;
         this.doctor = doctor;
         this.donationCenter = donationCenter;
         this.confirmed = confirmed;
         this.date = date;
+        this.reminderType = reminderType;
     }
 
 }

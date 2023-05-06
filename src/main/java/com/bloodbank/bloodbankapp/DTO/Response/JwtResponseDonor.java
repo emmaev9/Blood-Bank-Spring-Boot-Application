@@ -19,10 +19,11 @@ public class JwtResponseDonor {
     private String firstName;
     private String lastName;
     private String bloodType;
+    private String phoneNumber;
     private List<String> roles;
 
 
-    public JwtResponseDonor(String accessToken,String password, Integer id, String username, String email, List<String> roles,String firstName, String lastName, String bloodType, String county) {
+    public JwtResponseDonor(String accessToken,String password, Integer id, String username, String email, List<String> roles,String firstName, String lastName, String bloodType, String county, String phoneNumber) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
@@ -33,5 +34,6 @@ public class JwtResponseDonor {
         this.bloodType = bloodType;
         this.county = county;
         this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 }

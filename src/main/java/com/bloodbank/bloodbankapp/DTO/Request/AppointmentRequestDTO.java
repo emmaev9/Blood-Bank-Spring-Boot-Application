@@ -16,5 +16,7 @@ public class AppointmentRequestDTO {
     private DonationCenter location;
     @NonNull
     private String username;
+    @NonNull
+    private String reminderType;
 
 }

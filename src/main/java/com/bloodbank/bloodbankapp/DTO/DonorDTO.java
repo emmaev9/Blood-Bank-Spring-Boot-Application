@@ -24,4 +24,6 @@ public class DonorDTO {
     private String email;
     @NonNull
     private String password;
+    @NonNull
+    private String phoneNumber;
 }

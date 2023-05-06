@@ -1,7 +1,6 @@
 package com.bloodbank.bloodbankapp.Controller;
 
 import com.bloodbank.bloodbankapp.DTO.AppointmentDTO;
-import com.bloodbank.bloodbankapp.DTO.PaginationDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.AppointmentRequestDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.DoctorAppointmentsDTO;
 import com.bloodbank.bloodbankapp.DTO.Response.MessageResponse;
@@ -11,41 +10,31 @@ import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Entity.Donor;
 import com.bloodbank.bloodbankapp.Mapper.AppointmentMapper;
 import com.bloodbank.bloodbankapp.Repository.AppoitmentRepository;
-import com.bloodbank.bloodbankapp.Service.AppoitmentService;
-import com.bloodbank.bloodbankapp.Service.DoctorService;
-import com.bloodbank.bloodbankapp.Service.DonationCenterService;
-import com.bloodbank.bloodbankapp.Service.DonorService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import com.bloodbank.bloodbankapp.Service.*;
+import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/appointment/")
+@AllArgsConstructor
 public class AppointmentController {
 
-    @Autowired
-    DonorService donorService;
-    @Autowired
-    DoctorService doctorService;
-    @Autowired
-    AppoitmentService appointmentService;
-    @Autowired
-    DonationCenterService donationCenterService;
-    @Autowired
-    AppoitmentRepository appoitmentRepository;
-    @Autowired
-    AppointmentMapper appointmentMapper;
+    private final DonorService donorService;
+    private final DoctorService doctorService;
+    private final AppoitmentService appointmentService;
+    private final DonationCenterService donationCenterService;
+    private final AppoitmentRepository appoitmentRepository;
+    private final AppointmentMapper appointmentMapper;
 
     @PostMapping("/createAppointment")
     public ResponseEntity<?> makeAppointment(@RequestBody AppointmentRequestDTO appointment) throws ParseException {
+        System.out.println(appointment.getReminderType());
         appointmentService.saveAppoitment(appointment);
         return ResponseEntity.ok(new MessageResponse("Appointment registered successfully"));
     }
@@ -70,18 +59,6 @@ public class AppointmentController {
         return ResponseEntity.ok(allAppointments);
     }
 
-    public static Date setTimeToMidnight(Date date) {
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.setTime( date );
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTime();
-    }
-
     @GetMapping("/getCurrentDayAppointments/{username}/{date}")
     public ResponseEntity<?> getDoctorAppointmentsForCurrentDate(@PathVariable(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
                                                                  @PathVariable(value="username") String username){
@@ -90,8 +67,8 @@ public class AppointmentController {
         List<Appoitment> currentAppointments = new ArrayList<>();
 
         for(Appoitment appoitment: allAppointments){
-            if(appoitment.getDate().compareTo(setTimeToMidnight(date))==0){
-                System.out.println(setTimeToMidnight(appoitment.getDate()));
+            if(appoitment.getDate().compareTo(appointmentService.setTimeToMidnight(date))==0){
+                System.out.println(appointmentService.setTimeToMidnight(appoitment.getDate()));
                 currentAppointments.add(appoitment);
             }
         }
@@ -118,14 +95,15 @@ public class AppointmentController {
             appoitmentDTO.setAddress(address);
             appoitmentDTO.setDonationCenter(appoitment.getDonationCenter().getName());
             if(appoitment.isConfirmed()){
-                appoitmentDTO.setConfirmed("Confirmed");
+                appoitmentDTO.setConfirmed("YES");
             }
             else{
-                appoitmentDTO.setConfirmed("Not confirmed");
+                appoitmentDTO.setConfirmed("NO");
             }
             appoitmentDTO.setDate(appoitment.getDate().toString().substring(0,10));
             requestedAppointments.add(appoitmentDTO);
         }
+
         return ResponseEntity.ok(requestedAppointments);
     }
     @DeleteMapping("/deleteAppointment/{id}")

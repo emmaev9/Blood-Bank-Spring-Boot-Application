@@ -9,7 +9,7 @@ import com.bloodbank.bloodbankapp.Service.AppoitmentService;
 import com.bloodbank.bloodbankapp.Service.DonationCenterService;
 import com.bloodbank.bloodbankapp.Service.DonorService;
 import com.bloodbank.bloodbankapp.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +18,15 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/donor/")
+@AllArgsConstructor
 public class DonorController {
 
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    DonorService donorService;
-
-    @Autowired
-    DonationCenterService donationCenterService;
-
-    @Autowired
-    AppoitmentService appoitmentService;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    DonorMapper donorMapper;
+    private final UserService userService;
+    private final DonorService donorService;
+    private final DonationCenterService donationCenterService;
+    private final AppoitmentService appoitmentService;
+    private final PasswordEncoder encoder;
+    private final DonorMapper donorMapper;
 
     @GetMapping("/donorHome")
     public String donorHomePage(){

@@ -4,8 +4,8 @@ const API_URL = 'http://localhost:8080/api/appointment/';
 const API_URL_DOCTOR= 'http://localhost:8080/api/doctor/';
 
 class AppointmentService {
-    createAppointment(appointment, locations) {
-      return axios.post(API_URL + 'createAppointment', appointment, locations);
+    createAppointment(appointment) {
+      return axios.post(API_URL + 'createAppointment', appointment);
     }
 
     getCurrentAppointments(username){

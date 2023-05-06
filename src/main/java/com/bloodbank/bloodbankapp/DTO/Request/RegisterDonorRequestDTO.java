@@ -31,4 +31,7 @@ public class RegisterDonorRequestDTO {
 
     @NonNull
     private String county;
+
+    @NonNull
+    private String phoneNumber;
 }

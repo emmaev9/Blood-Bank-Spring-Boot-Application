@@ -26,7 +26,7 @@
         <td> {{ item.date }}</td>
         <td> {{ item.confirmed }}</td>
         <td>
-          <button v-if="visible && item.confirmed=='Not confirmed'" @click="confirmAppointment(item.id)" class="btn btn-info">
+          <button v-if="item.confirmed=='Not confirmed'" @click="confirmAppointment(item.id)" class="button-222" role="button">
             Confirm
           </button>
         </td>
@@ -58,7 +58,7 @@
             <td> {{ new Date(item.date).toJSON().slice(0,10).replace(/-/g,'-').toString()}}</td>
             <td> {{ item.confirmed }}</td>
             <td>
-              <button v-if="visible && !item.confirmed" @click="confirmAppointment(item.id)" class="btn btn-info">
+              <button v-if="!item.confirmed" @click="confirmAppointment(item.id)" class="button-222" role="button">
                 Confirm
               </button>
             </td>
@@ -201,6 +201,7 @@ export default {
 
 </script>
 <style>
+@import url(../../assets/styles/update_button.css);
 .title {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;

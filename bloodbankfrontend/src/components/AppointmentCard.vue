@@ -8,7 +8,7 @@
       <template #title> Make an appointment </template>
       <template #content>
 
-        <form class="mx-1 mx-md-4" @submit="makeAppointment">
+        <Form class="mx-1 mx-md-4" @submit="makeAppointment">
           <div class="d-flex flex-row align-items-center mb-4">
             <i class="fas fa-user fa-lg me-3 fa-fw"></i>
             <div class="form-outline flex-fill mb-0">
@@ -24,7 +24,7 @@
               <i class="fas fa-user fa-lg me-3 fa-fw"></i>
               <div class="form-outline flex-fill mb-0">
 
-                <Calendar v-model='this.date' 
+                <Calendar @change="checkDate" v-model="date"
                           dateFormat="yy/MM/dd" 
                           placeholder="Select a date" 
                           :minDate="disabledBefore"
@@ -36,13 +36,21 @@
               </div>
             </div>
           </div>
+          
+          <div v-for="category in reminderTypes" :key="category.key" class="radio">
+            <RadioButton v-model="selectedReminder" :inputId="category.key" name="pizza" :value="category.name" p-radiobutton-icon />
+            <label :for="category.key" class="ml-2">{{ category.name }}</label>
+          </div>
+        
+
+
 
           <div>
-            <button class="btn btn-info btn-lg">
+            <button class="button-333" role="button">
               Submit
             </button>
           </div>
-        </form>
+        </Form>
 
       </template>
     </Card>
@@ -55,9 +63,11 @@ import AppointmentService from "../services/appointment";
 import Dropdown from 'primevue/dropdown';
 import Card from 'primevue/card';
 import Calendar from 'primevue/calendar';
+import {Form} from 'vee-validate';
 import "primevue/resources/primevue.min.css"; //core
 import "primeicons/primeicons.css"; //icons
 import "primevue/resources/themes/mira/theme.css";
+import RadioButton from 'primevue/radiobutton';
 export default {
 
   name: "AppointmentCard",
@@ -65,7 +75,10 @@ export default {
     Dropdown,
     Card,
     Calendar,
+    Form,
+    RadioButton
   },
+
   data() {
     return {
 
@@ -73,13 +86,18 @@ export default {
       loading: false,
       locations: [],
       selectedLocation: "",
+      selectedReminder: "",
       date: "",
       message: "",
       updateListOfAppointments: "flase",
       disabledBefore: null,
       disabledAfter: null,
       datesToDisable: [],
-      disabledDates: []
+      disabledDates: [],
+      reminderTypes: [
+        {key: 1, name: "Reminder by email"},
+        {key: 2, name: "Reminder by SMS"}
+      ]
     };
 
   },
@@ -90,6 +108,27 @@ export default {
     }
   },
   methods: {
+    checkDate(date){
+      if(!this.disabledDates.includes(date)){
+        this.date = date;
+      }
+    },
+
+    populateTable(){
+      UserService.getDonorDonationCenters(this.currentUser.county).then(
+      (response) => {
+        this.locations = response.data;
+      },
+      (error) => {
+        this.content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      }
+    );
+    },
 
     chooseDonationCenter() {
       this.disabledDates = [];
@@ -118,6 +157,7 @@ export default {
       this.successful = false;
       this.loading = true;
       this.updateListOfAppointments = "true";
+      console.log(this.selectedReminder);
       //this.date = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate() + 2);
       let dateToSend = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate() + 2);
     
@@ -128,13 +168,22 @@ export default {
       appointment.location = this.selectedLocation;
       appointment.date = dateToSend;
       appointment.username = this.currentUser.username;
+      appointment.reminderType = this.selectedReminder;
 
       AppointmentService.createAppointment(appointment)
         .then(
           () => {
-            this.message = "Appointment successfully created!"
-            this.successful = false;
-            this.loading = false;
+            if(this.disabledDates.includes(this.date)){
+                 console.log(this.date + " not valid");
+                 this.message = "the maximum number of appointments has been reached for this day!"
+                 this.successful = true;
+                 this.loading = false;
+            }
+            else{
+              this.message = "Appointment successfully created!"
+              this.successful = false;
+              this.loading = false;
+            }
           },
           (error) => {
             this.message =
@@ -149,64 +198,46 @@ export default {
         );
     },
   },
+  mounted(){
+    this.populateTable();
+  },
 
   created() {
     this.disabledBefore = new Date();
     let today = new Date();
     this.disabledAfter = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 60);
     
-
-    UserService.getDonorDonationCenters(this.currentUser.county).then(
-      (response) => {
-        this.locations = response.data;
-      },
-      (error) => {
-        this.content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
-    );
+    this.populateTable();
   },
 }
 
 </script>
 
 <style>
-.button {
-  position: relative;
-  background-color: #21aeaa;
-  border: none;
-  font-size: 15px;
-  color: #FFFFFF;
-  padding: 20px;
-  width: 100px;
-  text-align: center;
-  transition-duration: 0.4s;
-  text-decoration: none;
-  overflow: hidden;
-  cursor: pointer;
+
+@import url(../assets/styles/submit_button.css);
+
+.radio {
+  /* ...existing styles */
+  place-content: center;
+  border: 0px;
+    width: 100%;
+    height: 2em;
 }
 
-.button:after {
+.radio::before {
   content: "";
-  background: #f1f1f1;
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px !important;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
 }
 
-.button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 2;
-  transition: 0s
+.radio:checked::before {
+  transform: scale(1);
 }
+
+
 </style>

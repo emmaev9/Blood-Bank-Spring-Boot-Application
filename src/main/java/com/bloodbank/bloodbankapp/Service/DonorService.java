@@ -5,7 +5,7 @@ import com.bloodbank.bloodbankapp.Entity.ERole;
 import com.bloodbank.bloodbankapp.Entity.Role;
 import com.bloodbank.bloodbankapp.Repository.DonorRepository;
 import com.bloodbank.bloodbankapp.Repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,19 +14,12 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class DonorService {
-    @Autowired
+
     private DonorRepository donorRepository;
-
-    @Autowired
     private RoleService roleService;
-
-    @Autowired
     private UserRepository userRepository;
-
-    public List<Donor> findAllDonors(){
-        return donorRepository.findAll();
-    }
 
     public void saveDonor(Donor donor){
         Set<Role> roleSet = new HashSet<>();
@@ -49,10 +42,7 @@ public class DonorService {
                                           updatedDonor.getFirstName(), updatedDonor.getLastName(),
                                           updatedDonor.getEmail(), updatedDonor.getCounty(),
                                           updatedDonor.getPassword(), updatedDonor.getUsername(),
-                                          updatedDonor.getBloodType());
+                                          updatedDonor.getBloodType(),
+                                          updatedDonor.getPhoneNumber());
     }
-    public void deleteDonor(Donor donor){
-        donorRepository.delete(donor);
-    }
-
 }

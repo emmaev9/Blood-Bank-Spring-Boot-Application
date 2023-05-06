@@ -1,0 +1,24 @@
+/* CSS */
+.button-333 {
+  background-color: #c2e5fb;
+  border-radius: 100px;
+  box-shadow: rgba(44, 130, 187, 0.2) 0 -25px 18px -14px inset,#2c3fbb26 0 1px 2px,rgba(44, 142, 187, 0.15) 0 2px 4px,rgba(87, 44, 187, 0.15) 0 4px 8px,rgba(44, 187, 154, 0.15) 0 8px 16px,rgba(99, 44, 187, 0.15) 0 16px 32px;
+  color: rgb(68, 0, 255);
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-333:hover {
+  box-shadow: rgba(98, 80, 214, 0.35) 0 -25px 18px -14px inset,rgba(44, 115, 187, 0.25) 0 1px 2px,rgba(44, 187, 175, 0.25) 0 2px 4px,rgba(46, 44, 187, 0.25) 0 4px 8px,rgba(44, 80, 187, 0.25) 0 8px 16px,rgba(44, 130, 187, 0.25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}

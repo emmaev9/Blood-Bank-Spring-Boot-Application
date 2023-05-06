@@ -2,13 +2,13 @@
   <section class="vh-100" style="background-color:white;">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-          <div class="card text-black" style="border-radius: 25px;">
-            <div class="card-body p-md-5">
+        <div class="col-lg-6 col-sm-9">
+          <div class="card text-black  shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="card-body">
               <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                <div class="col-md-10">
 
-                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Doctor Register Form</p>
+                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Doctor Register</p>
 
                   <Form @submit="handleReg" :validation-schema="schema" class="mx-1 mx-md-4">
                     <div v-if="!successful">
@@ -17,7 +17,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="firstName">First Name</label>
-                          <Field type="text" name="firstName" class="form-control" />
+                          <Field type="text" name="firstName" class="form-control  form-control-sm" />
                           <ErrorMessage name="firstName" class="error-feedback" />
 
                         </div>
@@ -27,7 +27,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="lastName">Last Name</label>
-                          <Field type="text" name="lastName" class="form-control" />
+                          <Field type="text" name="lastName" class="form-control  form-control-sm" />
                           <ErrorMessage name="lastName" class="error-feedback" />
 
                         </div>
@@ -37,7 +37,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="cnp">CNP</label>
-                          <Field type="text" name="cnp" class="form-control" />
+                          <Field type="text" name="cnp" class="form-control  form-control-sm" />
                           <ErrorMessage name="cnp" class="error-feedback" />
 
                         </div>
@@ -47,7 +47,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="username">Username</label>
-                          <Field type="text" name="username" class="form-control" />
+                          <Field type="text" name="username" class="form-control  form-control-sm" />
                           <ErrorMessage name="username" class="error-feedback" />
                         </div>
                       </div>
@@ -56,7 +56,7 @@
                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="email">Email</label>
-                          <Field type="email" name="email" class="form-control" />
+                          <Field type="email" name="email" class="form-control  form-control-sm" />
                           <ErrorMessage name="email" class="error-feedback" />
                         </div>
                       </div>
@@ -65,7 +65,7 @@
                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="password">Password</label>
-                          <Field type="password" name="password" class="form-control" />
+                          <Field type="password" name="password" class="form-control  form-control-sm" />
                           <ErrorMessage name="password" class="error-feedback" />
                         </div>
                       </div>
@@ -81,8 +81,7 @@
                       </div>
 
                       <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <button class="btn btn-primary btn-lg" :disabled="loading">
-                          <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+                        <button class="button-333" role="button">
                           Register
                         </button>
                       </div>
@@ -94,7 +93,7 @@
                     {{ message }}
                     <div>
                       <router-link to="/AdminHome" class="register-link">
-                        <button type="submit" class="btn btn-info">Back to home page</button>
+                        <button type="submit" role="button" class="button-333">Back to home page</button>
                       </router-link>
                     </div>
 
@@ -221,6 +220,7 @@ export default {
 </script>
   
 <style scoped>
+@import url(../assets/styles/submit_button.css);
 .error-feedback {
   color: red;
   font-size: 0.8rem;

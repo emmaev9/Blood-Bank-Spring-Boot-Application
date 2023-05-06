@@ -11,8 +11,6 @@ import java.util.List;
 public interface DonationCenterRepository extends JpaRepository<DonationCenter, Integer> {
     DonationCenter findDonationCenterByName(String name);
     List<DonationCenter> findAll();
-    boolean existsByName(String name);
-    boolean existsByCity(String name);
     boolean existsById(Integer id);
     boolean existsByCountyAndName(String county, String name);
     DonationCenter findDonationCenterById(Integer id);

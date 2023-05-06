@@ -27,7 +27,10 @@
             <td> {{ item.date }}</td>
             <td> {{ item.confirmed }}</td>
             <td>
-              <button @click="deleteSelectedAppointment(item.id)" class="btn btn-info">Delete</button>
+              <button @click="deleteSelectedAppointment(item.id)" class="button-33" role="button">
+                  Cancel
+                
+              </button>
           </td>
           </tr>
         </tbody>
@@ -47,7 +50,7 @@ export default {
   props: {
     updateTable: {
       type: String,
-      default: "false"
+      default: "true"
     }
   },
 
@@ -61,8 +64,7 @@ export default {
   },
   computed: {
     currentUser() {
-      //return JSON.parse(localStorage.getItem("user"));
-      return this.$store.state.auth.user;
+      return JSON.parse(localStorage.getItem("user"));
     }
   },
   methods: {
@@ -105,6 +107,7 @@ export default {
 
 </script>
 <style>
+@import url(../assets/styles/cancel_button.css);
 .title {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;

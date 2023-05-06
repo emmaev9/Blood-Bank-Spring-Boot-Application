@@ -11,6 +11,7 @@ import com.bloodbank.bloodbankapp.Service.DoctorService;
 import com.bloodbank.bloodbankapp.Service.DonorService;
 import com.bloodbank.bloodbankapp.Service.UserService;
 import com.bloodbank.bloodbankapp.Utils.JwtUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,28 +28,16 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/auth")
+@AllArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private DonorService donorService;
-
-    @Autowired
-    private DoctorService doctorService;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
-    private DonorMapper donorMapper;
-
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final DonorService donorService;
+    private final DoctorService doctorService;
+    private final JwtUtils jwtUtils;
+    private final PasswordEncoder encoder;
+    private final DonorMapper donorMapper;
 
     @GetMapping("/Home")
     public String home(){
@@ -81,7 +70,8 @@ public class AuthController {
                     currentDonor.getFirstName(),
                     currentDonor.getLastName(),
                     currentDonor.getBloodType(),
-                    currentDonor.getCounty()));
+                    currentDonor.getCounty(),
+                    currentDonor.getPhoneNumber()));
         }
         else if(roles.contains("ADMIN")){
             return ResponseEntity.ok(new JwtResponseAdmin(jwt,

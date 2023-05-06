@@ -6,45 +6,49 @@ import com.bloodbank.bloodbankapp.Entity.Doctor;
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Entity.Donor;
 import com.bloodbank.bloodbankapp.Repository.AppoitmentRepository;
-import com.bloodbank.bloodbankapp.Repository.DoctorRepository;
 import com.bloodbank.bloodbankapp.Repository.DonationCenterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.expression.Dates;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class AppoitmentService {
-    @Autowired
-    private AppoitmentRepository appoitmentRepository;
-    @Autowired
-    private DonorService donorService;
-    @Autowired
-    private DoctorService doctorService;
-    @Autowired
-    private DonationCenterRepository donationCenterRepository;
+
+    private final AppoitmentRepository appoitmentRepository;
+    private final DonorService donorService;
+    private final DoctorService doctorService;
+    private final DonationCenterRepository donationCenterRepository;
+    private final EmailService emailService;
 
     public void saveAppoitment(AppointmentRequestDTO appointmentDTO) throws ParseException {
+
         Appoitment newAppointment = new Appoitment();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         Date date = formatter.parse(appointmentDTO.getDate());
+        Donor donor = donorService.findDonorByUsername(appointmentDTO.getUsername());
+        Doctor doctor = doctorService.findDoctorWithMinAppointments();
+        DonationCenter donationCenter = donationCenterRepository.findDonationCenterByName(appointmentDTO.getLocation().getName());
 
         newAppointment.setDate(date);
-        newAppointment.setDonor(donorService.findDonorByUsername(appointmentDTO.getUsername()));
-        newAppointment.setDonationCenter(donationCenterRepository.findDonationCenterByName(appointmentDTO.getLocation().getName()));
+        newAppointment.setDonor(donor);
+        newAppointment.setDonationCenter(donationCenter);
         newAppointment.setConfirmed(false);
-
-        Doctor doctor = doctorService.findDoctorWithMinAppointments();
         newAppointment.setDoctor(doctor);
+        newAppointment.setReminderType(appointmentDTO.getReminderType());
         appoitmentRepository.save(newAppointment);
+
+        String message = "Hello " + donor.getFirstName()+  ",\n" + "\nYou successfully registered for blood donation via BloodBank application!" +
+                "\n\nWe are waiting for you at "+ donationCenter.getName() +", " + donationCenter.getCity()+".";
+        emailService.sendEmail(donor.getEmail(), "Blood donation appointment", message);
     }
+
     public List<Appoitment> findUserAppoitments(Donor donor){
         return appoitmentRepository.findUserAppoitments(donor);
     }
@@ -77,10 +81,8 @@ public class AppoitmentService {
         for(Map.Entry<Date,Integer> entry : map.entrySet()){
             if(entry.getValue() > donationCenter.getMaximumDonations()){
                 nonavailableDates.add(entry.getKey());
-                System.out.println(entry.getKey());
             }
         }
-        System.out.println(nonavailableDates.size());
         return nonavailableDates;
     }
 
@@ -88,6 +90,25 @@ public class AppoitmentService {
     {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return appoitmentRepository.findAll(pageable);
+    }
+    public List<Appoitment> findNextDayAppointments(){
+        final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+        Date today = new Date();
+        Date nextDay = new Date(today.getTime() + MILLIS_IN_A_DAY + MILLIS_IN_A_DAY + MILLIS_IN_A_DAY);
+        Date date = setTimeToMidnight(nextDay);
+        return appoitmentRepository.findAllByDate(date);
+    }
+
+    public Date setTimeToMidnight(Date date) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime( date );
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
     }
 
 }

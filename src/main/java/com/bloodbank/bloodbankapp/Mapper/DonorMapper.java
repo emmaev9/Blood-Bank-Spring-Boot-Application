@@ -15,6 +15,7 @@ public class DonorMapper {
         donor.setUsername(donorDTO.getUsername());
         donor.setBloodType(donorDTO.getBloodType());
         donor.setCounty(donorDTO.getCounty());
+        donor.setPhoneNumber(donorDTO.getPhoneNumber());
         return donor;
     }
 }

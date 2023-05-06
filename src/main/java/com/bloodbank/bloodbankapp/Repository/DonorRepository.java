@@ -22,11 +22,12 @@ public interface DonorRepository  extends JpaRepository<Donor, Integer> {
             "    d.firstName = :firstname," +
             "    d.password = :password," +
             "    d.bloodType = :bloodType," +
-            "    d.username = :username" +
+            "    d.username = :username," +
+            "    d.phoneNumber = :phoneNumber" +
             "  where d.id = :donorId")
     void updateDonor(@Param("donorId") Integer donorId,@Param("firstname")String firstName, @Param("lastname")String lastname,
                       @Param("email") String email, @Param("county") String county, @Param("password") String password,
-                     @Param("username") String username, @Param("bloodType") String bloodType);
+                     @Param("username") String username, @Param("bloodType") String bloodType, @Param("phoneNumber") String phoneNumber);
 
 
     Donor findDonorById(@Param("id") Integer id);

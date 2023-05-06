@@ -16,7 +16,6 @@ public interface AppoitmentRepository extends JpaRepository<Appoitment, Integer>
     @Query("SELECT a FROM Appoitment a WHERE a.doctor = :doctor")
     List<Appoitment> getAppoitmentByDoctor(@Param("doctor") Doctor doctor);
     Appoitment findAppoitmentById(@Param("id") Integer id);
-    long countByDonationCenter_Id(Integer id);
-    long countAllByDonationCenterAndDate(DonationCenter donationCenter, Date date);
+    List<Appoitment> findAllByDate(Date date);
     List<Appoitment> findAllByDonationCenter(DonationCenter donationCenter);
 }

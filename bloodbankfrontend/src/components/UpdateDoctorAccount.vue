@@ -2,11 +2,11 @@
   <section class="vh-100" style="background-color:white;">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-          <div class="card text-black" style="border-radius: 25px;">
-            <div class="card-body p-md-5">
+        <div class="col-lg-6 col-sm-11">
+          <div class="card text-black  shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="card-body">
               <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                <div class="col-md-10">
 
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Update Doctor</p>
 
@@ -18,7 +18,7 @@
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="firstName">First Name</label>
                           <Field v-model="this.currentDoctor.firstName" type="text" name="firstName"
-                            class="form-control" />
+                            class="form-control form-control-sm" />
                           <ErrorMessage name="firstName" class="error-feedback" />
 
                         </div>
@@ -28,7 +28,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="lastName">Last Name</label>
-                          <Field v-model="this.currentDoctor.lastName" type="text" name="lastName" class="form-control" />
+                          <Field v-model="this.currentDoctor.lastName" type="text" name="lastName" class="form-control  form-control-sm" />
                           <ErrorMessage name="lastName" class="error-feedback" />
 
                         </div>
@@ -38,7 +38,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="cnp">CNP</label>
-                          <Field v-model="this.currentDoctor.cnp" type="text" name="cnp" class="form-control" />
+                          <Field v-model="this.currentDoctor.cnp" type="text" name="cnp" class="form-control  form-control-sm" />
                           <ErrorMessage name="cnp" class="error-feedback" />
 
                         </div>
@@ -48,7 +48,7 @@
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="username">Username</label>
-                          <Field v-model="this.currentDoctor.username" type="text" name="username" class="form-control" />
+                          <Field v-model="this.currentDoctor.username" type="text" name="username" class="form-control  form-control-sm" />
                           <ErrorMessage name="username" class="error-feedback" />
                         </div>
                       </div>
@@ -57,7 +57,7 @@
                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
                           <label class="form-label" for="email">Email</label>
-                          <Field v-model="this.currentDoctor.email" type="email" name="email" class="form-control" />
+                          <Field v-model="this.currentDoctor.email" type="email" name="email" class="form-control  form-control-sm" />
                           <ErrorMessage name="email" class="error-feedback" />
                         </div>
                       </div>
@@ -75,8 +75,7 @@
 
 
                       <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <button class="btn btn-info btn-lg" :disabled="loading">
-                          <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+                        <button class="button-333" role="button">
                           Update
                         </button>
                       </div>
@@ -242,6 +241,7 @@ export default {
 </script>
   
 <style scoped>
+@import url(../assets/styles/submit_button.css);
 .error-feedback {
   color: red;
   font-size: 0.8rem;
