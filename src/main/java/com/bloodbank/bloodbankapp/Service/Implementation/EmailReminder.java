@@ -1,18 +1,16 @@
-package com.bloodbank.bloodbankapp.Reminder;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Entity.Donor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bloodbank.bloodbankapp.Service.Reminder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-
-public class EmailReminder implements Reminder{
+public class EmailReminder implements Reminder {
 
     private Appoitment appoitment;
 
@@ -40,7 +38,7 @@ public class EmailReminder implements Reminder{
         mailSender.setPort(587);
 
         mailSender.setUsername("szakacsemma9@gmail.com");
-        mailSender.setPassword("pnnjklgdkgczjysa");
+        mailSender.setPassword("sgwazpxfdvkcoaio");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

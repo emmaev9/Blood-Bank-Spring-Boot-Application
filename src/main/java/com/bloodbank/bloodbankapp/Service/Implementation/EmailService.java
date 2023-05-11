@@ -1,7 +1,6 @@
-package com.bloodbank.bloodbankapp.Service;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-
+        System.out.println(message);
         mailSender.send(message);
     }
 }

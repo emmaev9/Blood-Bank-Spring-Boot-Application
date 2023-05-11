@@ -1,9 +1,8 @@
 package com.bloodbank.bloodbankapp.Config;
 
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
-import com.bloodbank.bloodbankapp.Reminder.Reminder;
-import com.bloodbank.bloodbankapp.Reminder.ReminderFactory;
-import com.bloodbank.bloodbankapp.Service.AppoitmentService;
+import com.bloodbank.bloodbankapp.Service.Implementation.ReminderFactory;
+import com.bloodbank.bloodbankapp.Service.Implementation.AppoitmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ public class Scheduler {
     @Autowired
     private AppoitmentService appoitmentService;
 
-    @Scheduled(fixedDelay = 40000)
+    @Scheduled(fixedDelay = 1000 * 60 * 60 * 12)
     public void jobScheduler(){
        List<Appoitment> listOfAppointments = appoitmentService.findNextDayAppointments();
        if(!listOfAppointments.isEmpty()){

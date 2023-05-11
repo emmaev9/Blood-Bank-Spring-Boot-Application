@@ -1,11 +1,9 @@
 package com.bloodbank.bloodbankapp.Security;
 
 import com.bloodbank.bloodbankapp.Entity.User;
-import com.bloodbank.bloodbankapp.Service.DonorService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

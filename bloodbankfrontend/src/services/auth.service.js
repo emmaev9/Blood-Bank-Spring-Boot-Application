@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api/auth/';
-const API_URL_ADMIN = 'http://localhost:8080/api/admin/';
+const API_URL_DOCTOR = 'http://localhost:8080/api/doctor/';
+const API_URL_DONOR = 'http://localhost:8080/api/donor/';
 
 
 
@@ -29,7 +30,7 @@ class AuthService {
 
   registerDonor(user){
     console.log(user);
-    return axios.post(API_URL + 'registerDonor', {
+    return axios.post(API_URL_DONOR + 'registerDonor', {
       username: user.username,
       email: user.email,
       password: user.password,
@@ -42,7 +43,7 @@ class AuthService {
   }
   registerDoctor(doctor){
     console.log(doctor);
-    return axios.post(API_URL_ADMIN + 'registerDoctor', {
+    return axios.post(API_URL_DOCTOR + 'registerDoctor', {
       username: doctor.username,
       email: doctor.email,
       password: doctor.password,

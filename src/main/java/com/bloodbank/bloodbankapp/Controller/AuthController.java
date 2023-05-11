@@ -1,24 +1,19 @@
 package com.bloodbank.bloodbankapp.Controller;
 
-import com.bloodbank.bloodbankapp.DTO.DonorDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.LoginRequestDTO;
 import com.bloodbank.bloodbankapp.DTO.Response.*;
 import com.bloodbank.bloodbankapp.Entity.Doctor;
 import com.bloodbank.bloodbankapp.Entity.Donor;
-import com.bloodbank.bloodbankapp.Mapper.DonorMapper;
 import com.bloodbank.bloodbankapp.Security.UserDetailsImpl;
-import com.bloodbank.bloodbankapp.Service.DoctorService;
-import com.bloodbank.bloodbankapp.Service.DonorService;
-import com.bloodbank.bloodbankapp.Service.UserService;
+import com.bloodbank.bloodbankapp.Service.IDoctorService;
+import com.bloodbank.bloodbankapp.Service.IDonorService;
 import com.bloodbank.bloodbankapp.Utils.JwtUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,12 +27,9 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final DonorService donorService;
-    private final DoctorService doctorService;
+    private final IDonorService donorService;
+    private final IDoctorService doctorService;
     private final JwtUtils jwtUtils;
-    private final PasswordEncoder encoder;
-    private final DonorMapper donorMapper;
 
     @GetMapping("/Home")
     public String home(){
@@ -80,7 +72,7 @@ public class AuthController {
                     userDetails.getEmail(),
                     roles));
         }
-        else {
+        else { //DOCTOR
             return ResponseEntity.ok(new JwtResponseDoctor(jwt,
                     userDetails.getId(),
                     userDetails.getUsername(),
@@ -92,26 +84,4 @@ public class AuthController {
                     currentDoctor.getCNP()));
         }
     }
-
-    @PostMapping("/registerDonor")
-    public ResponseEntity<?> registerDonor(@RequestBody DonorDTO registeredDonor){
-        if(userService.existsByUsername(registeredDonor.getUsername())){
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
-
-        if(userService.existsByEmail(registeredDonor.getEmail())){
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already taken!"));
-        }
-
-        Donor newDonor = donorMapper.donorDTOToModel(registeredDonor);
-        newDonor.setPassword(encoder.encode(newDonor.getPassword()));
-        donorService.saveDonor(newDonor);
-        return ResponseEntity.ok(new MessageResponse("Donor registered successfully"));
-    }
-
-
 }

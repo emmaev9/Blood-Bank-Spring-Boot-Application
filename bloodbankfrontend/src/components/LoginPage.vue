@@ -140,10 +140,7 @@ export default {
 <style>
 @import url(../assets/styles/submit_button.css);
 
-.register-link {
-  color: blue;
-  font-weight: lighter;
-}
+
 .error-feedback {
   color: red;
   font-size: 0.8rem;

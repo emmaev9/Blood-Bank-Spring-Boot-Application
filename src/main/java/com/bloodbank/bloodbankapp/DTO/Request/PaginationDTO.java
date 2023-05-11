@@ -1,4 +1,4 @@
-package com.bloodbank.bloodbankapp.DTO;
+package com.bloodbank.bloodbankapp.DTO.Request;
 
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
 import lombok.AllArgsConstructor;

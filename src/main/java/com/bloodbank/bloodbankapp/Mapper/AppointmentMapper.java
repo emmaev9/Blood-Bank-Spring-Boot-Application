@@ -1,5 +1,6 @@
 package com.bloodbank.bloodbankapp.Mapper;
 
+import com.bloodbank.bloodbankapp.DTO.Request.AppointmentDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.DoctorAppointmentsDTO;
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
 import com.bloodbank.bloodbankapp.Entity.Doctor;
@@ -13,14 +14,32 @@ public class AppointmentMapper {
         doctorAppointmentsDTO.setDonor(appoitment.getDonor());
         doctorAppointmentsDTO.setDonationCenter(appoitment.getDonationCenter());
         if(appoitment.isConfirmed()){
-            doctorAppointmentsDTO.setConfirmed("Confirmed");
+            doctorAppointmentsDTO.setConfirmed("YES");
         }
         else{
-            doctorAppointmentsDTO.setConfirmed("Not confirmed");
+            doctorAppointmentsDTO.setConfirmed("NO");
         }
         doctorAppointmentsDTO.setId(appoitment.getId());
         doctorAppointmentsDTO.setDate(appoitment.getDate().toString().substring(0,10));
         return doctorAppointmentsDTO;
+    }
+    public AppointmentDTO entityToDto(Appoitment appoitment){
+        String address = appoitment.getDonationCenter().getCounty() + ", " +
+                appoitment.getDonationCenter().getCity() + ", " +
+                appoitment.getDonationCenter().getStreet() + ", " +
+                appoitment.getDonationCenter().getNumber();
+        AppointmentDTO appoitmentDTO = new AppointmentDTO();
+        appoitmentDTO.setId(appoitment.getId());
+        appoitmentDTO.setAddress(address);
+        appoitmentDTO.setDonationCenter(appoitment.getDonationCenter().getName());
+        if(appoitment.isConfirmed()){
+            appoitmentDTO.setConfirmed("YES");
+        }
+        else{
+            appoitmentDTO.setConfirmed("NO");
+        }
+        appoitmentDTO.setDate(appoitment.getDate().toString().substring(0,10));
+        return appoitmentDTO;
     }
 
 }

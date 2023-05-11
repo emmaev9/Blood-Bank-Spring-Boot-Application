@@ -1,6 +1,6 @@
 package com.bloodbank.bloodbankapp.Mapper;
 
-import com.bloodbank.bloodbankapp.DTO.DonorDTO;
+import com.bloodbank.bloodbankapp.DTO.Request.DonorDTO;
 import com.bloodbank.bloodbankapp.Entity.Donor;
 import org.springframework.stereotype.Component;
 

@@ -1,15 +1,16 @@
-package com.bloodbank.bloodbankapp.Service;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import com.bloodbank.bloodbankapp.Entity.ERole;
 import com.bloodbank.bloodbankapp.Entity.Role;
 import com.bloodbank.bloodbankapp.Repository.RoleRepository;
+import com.bloodbank.bloodbankapp.Service.IRoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class RoleService {
+public class RoleService implements IRoleService {
 
     private final RoleRepository roleRepository;
 
