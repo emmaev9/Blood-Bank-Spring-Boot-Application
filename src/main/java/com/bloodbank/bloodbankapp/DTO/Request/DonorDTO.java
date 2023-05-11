@@ -1,16 +1,17 @@
-package com.bloodbank.bloodbankapp.DTO;
+package com.bloodbank.bloodbankapp.DTO.Request;
 
-import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import lombok.*;
 
-@Getter
-@Setter
+import javax.persistence.Column;
+
 @NoArgsConstructor
 @AllArgsConstructor
-public class DoctorDTO {
-    private String cnp;
+@Setter
+@Getter
+public class DonorDTO {
+    private String bloodType;
     @NonNull
-    private DonationCenter location;
+    private String county;
     @NonNull
     private Integer id;
     @NonNull
@@ -21,6 +22,8 @@ public class DoctorDTO {
     private String username;
     @NonNull
     private String email;
-
+    @NonNull
     private String password;
+    @NonNull
+    private String phoneNumber;
 }

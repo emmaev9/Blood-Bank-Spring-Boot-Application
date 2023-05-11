@@ -15,6 +15,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     Doctor findDoctorByUsername(String username);
 
     boolean existsByUsername(String username);
+    boolean existsById(Integer id);
 
     @Modifying
     @Query("UPDATE Doctor d " +

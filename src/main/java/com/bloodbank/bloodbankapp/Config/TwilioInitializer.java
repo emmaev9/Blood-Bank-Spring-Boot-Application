@@ -1,6 +1,7 @@
 package com.bloodbank.bloodbankapp.Config;
 
 import com.twilio.Twilio;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

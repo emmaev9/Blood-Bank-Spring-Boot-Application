@@ -1,13 +1,14 @@
-package com.bloodbank.bloodbankapp.Reminder;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Entity.Donor;
+import com.bloodbank.bloodbankapp.Service.Reminder;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.rest.api.v2010.account.MessageCreator;
 import com.twilio.type.PhoneNumber;
 
-public class SmsReminder implements Reminder{
+public class SmsReminder implements Reminder {
 
     private Appoitment appoitment;
     public SmsReminder(Appoitment appoitment){

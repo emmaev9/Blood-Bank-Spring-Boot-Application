@@ -1,21 +1,15 @@
 package com.bloodbank.bloodbankapp.Controller;
 
-import com.bloodbank.bloodbankapp.DTO.DoctorDTO;
-import com.bloodbank.bloodbankapp.DTO.PaginationDTO;
-import com.bloodbank.bloodbankapp.Entity.Appoitment;
-import com.bloodbank.bloodbankapp.Entity.Doctor;
-import com.bloodbank.bloodbankapp.Mapper.DoctorMapper;
-import com.bloodbank.bloodbankapp.Service.AppoitmentService;
-import com.bloodbank.bloodbankapp.Service.DoctorService;
-import com.bloodbank.bloodbankapp.Service.UserService;
+import com.bloodbank.bloodbankapp.DTO.Request.DoctorDTO;
+import com.bloodbank.bloodbankapp.DTO.Request.PaginationDTO;
+import com.bloodbank.bloodbankapp.DTO.Response.MessageResponse;
+import com.bloodbank.bloodbankapp.Facade.DoctorFacade;
+import com.bloodbank.bloodbankapp.Facade.UserFacade;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.transaction.Transactional;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -23,9 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 public class DoctorController {
 
-    private final DoctorService doctorService;
-    private final AppoitmentService appointmentService;
-    private final DoctorMapper doctorMapper;
+    private final DoctorFacade doctorFacade;
+    private final UserFacade userFacade;
 
     @GetMapping("/doctorHome")
     public ResponseEntity<?> doctorHome(){
@@ -34,34 +27,73 @@ public class DoctorController {
 
     @GetMapping("/page/{pageNo}")
     public ResponseEntity<?> findPaginated( @PathVariable(value = "pageNo") int pageNo) {
-        int pageSize = 5;
-        Page<Appoitment> page = appointmentService.getAllAppointments(pageNo, pageSize);
-        List<Appoitment> listAppointment = page.getContent();
-        PaginationDTO paginationDTO = new PaginationDTO(pageNo, page.getTotalPages(), page.getTotalElements(), listAppointment);
+        PaginationDTO paginationDTO = doctorFacade.getPagination(pageNo);
         return ResponseEntity.ok(paginationDTO);
     }
 
     @GetMapping("/getDoctorById")
     public ResponseEntity<?>getDoctor(@RequestParam(value="id") Integer id){
-        Doctor doctor = doctorService.findDoctorById(id);
-        DoctorDTO doctorDTO = doctorMapper.doctorModelToDTO(doctor);
-        return ResponseEntity.ok(doctorDTO);
+        if(doctorFacade.existsDoctorById(id)) {
+            return ResponseEntity.ok(doctorFacade.getDoctorById(id));
+        }else{
+            return ResponseEntity.badRequest().body(new MessageResponse("Doctor with id " + id + " was not found"));
+        }
     }
 
     @GetMapping("/getDoctorAppointments")
     public ResponseEntity<?>getDoctorAppointments(@RequestParam(value = "username")String username){
-        Doctor doctor = doctorService.findDoctorByUsername(username);
-        List<Appoitment> appointments = appointmentService.findAllDoctorAppointments(doctor);
-        return ResponseEntity.ok(appointments);
+        return ResponseEntity.ok(doctorFacade.getDoctorAppointments(username));
     }
+
     @GetMapping("/getAllDoctors")
     public ResponseEntity<?> getAllDoctors(){
-        List<Doctor> doctorList = doctorService.findAllDoctors();
-        List<DoctorDTO> doctorDTOList = new ArrayList<>();
-        for(Doctor doc : doctorList){
-            DoctorDTO doctorDTO = doctorMapper.doctorModelToDTO(doc);
-            doctorDTOList.add(doctorDTO);
+        return ResponseEntity.ok(doctorFacade.getListOfDoctors());
+    }
+
+    @PostMapping("/registerDoctor")
+    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDTO registeredDoctor){
+        if(userFacade.existsUserByEmail(registeredDoctor.getUsername())){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
         }
-        return ResponseEntity.ok(doctorDTOList);
+        if(userFacade.existsUserByEmail(registeredDoctor.getEmail())){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already taken!"));
+        }
+
+        doctorFacade.saveDoctor(registeredDoctor);
+        return ResponseEntity.ok(new MessageResponse("Doctor registered!"));
+    }
+
+    @DeleteMapping("/deleteDoctor/{id}")
+    public ResponseEntity<?> deleteDoctor(@PathVariable(value = "id") Integer id) {
+        if(doctorFacade.existsDoctorById(id)) {
+            doctorFacade.deleteDoctorById(id);
+            return ResponseEntity.ok(new MessageResponse("Doctor deleted"));
+        }else{
+            return ResponseEntity.badRequest().body(new MessageResponse("Doctor with id " + id + " was not found"));
+        }
+    }
+
+    @Transactional
+    @PostMapping("/editDoctorProfile")
+    public ResponseEntity<?> editProfileForm(@RequestBody DoctorDTO updatedDoctor){
+        Integer id = updatedDoctor.getId();
+        if(userFacade.findUserByUsername(updatedDoctor.getUsername()) != null
+                && userFacade.findUserById(id)!=userFacade.findUserByUsername(updatedDoctor.getUsername()) ){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
+        }
+        if(userFacade.findUserByEmail(updatedDoctor.getEmail()) != null
+                && userFacade.findUserById(id)!=userFacade.findUserByEmail(updatedDoctor.getEmail()) ){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already taken!"));
+        }
+        doctorFacade.updateDoctor(updatedDoctor);
+        return ResponseEntity.ok(new MessageResponse("Profile updated!"));
     }
 }

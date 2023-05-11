@@ -1,7 +1,8 @@
-package com.bloodbank.bloodbankapp.Service;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import com.bloodbank.bloodbankapp.Entity.DonationCenter;
 import com.bloodbank.bloodbankapp.Repository.DonationCenterRepository;
+import com.bloodbank.bloodbankapp.Service.IDonationCenterService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class DonationCenterService {
+public class DonationCenterService implements IDonationCenterService {
 
     private final DonationCenterRepository donationCenterRepository;
 

@@ -1,19 +1,12 @@
 package com.bloodbank.bloodbankapp.Controller;
 
-import com.bloodbank.bloodbankapp.DTO.DonorDTO;
+import com.bloodbank.bloodbankapp.DTO.Request.DonorDTO;
 import com.bloodbank.bloodbankapp.DTO.Response.MessageResponse;
-import com.bloodbank.bloodbankapp.Entity.DonationCenter;
-import com.bloodbank.bloodbankapp.Entity.Donor;
-import com.bloodbank.bloodbankapp.Mapper.DonorMapper;
-import com.bloodbank.bloodbankapp.Service.AppoitmentService;
-import com.bloodbank.bloodbankapp.Service.DonationCenterService;
-import com.bloodbank.bloodbankapp.Service.DonorService;
-import com.bloodbank.bloodbankapp.Service.UserService;
+import com.bloodbank.bloodbankapp.Facade.DonorFacade;
+import com.bloodbank.bloodbankapp.Facade.UserFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -21,22 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class DonorController {
 
-    private final UserService userService;
-    private final DonorService donorService;
-    private final DonationCenterService donationCenterService;
-    private final AppoitmentService appoitmentService;
-    private final PasswordEncoder encoder;
-    private final DonorMapper donorMapper;
+    private final UserFacade userFacade;
+    private final DonorFacade donorFacade;
 
     @GetMapping("/donorHome")
     public String donorHomePage(){
         return "donorHome";
-    }
-
-    @GetMapping("/donationCenters")
-    public ResponseEntity<?> getDonorCenters(@RequestParam String county){
-        List<DonationCenter> donationCenters = donationCenterService.findAllDonationCentersInCounty(county);
-        return ResponseEntity.ok(donationCenters);
     }
 
     @GetMapping("/editDonorProfile")
@@ -44,31 +27,45 @@ public class DonorController {
         return "editProfile";
     }
 
-    @PostMapping("/editDonorProfile")
-    public ResponseEntity<?> editProfileForm(@RequestBody DonorDTO updatedDonor){
-        Integer id = updatedDonor.getId();
-        if(userService.findUserByUsername(updatedDonor.getUsername()) != null
-                && userService.findUserById(id)!=userService.findUserByUsername(updatedDonor.getUsername()) ){
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<?> deleteDonor(@PathVariable Integer id){
+        donorFacade.deleteDonor(id);
+        return ResponseEntity.ok().body(new MessageResponse("Account successfully deleted!"));
+    }
+
+    @PostMapping("/registerDonor")
+    public ResponseEntity<?> registerDonor(@RequestBody DonorDTO registeredDonor){
+        if(userFacade.existsUserByUsername(registeredDonor.getUsername())){
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
-        if(userService.findUserByEmail(updatedDonor.getEmail()) != null
-                && userService.findUserById(id)!=userService.findUserByEmail(updatedDonor.getEmail()) ){
+
+        if(userFacade.existsUserByEmail(registeredDonor.getEmail())){
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already taken!"));
         }
-        Donor donor = donorMapper.donorDTOToModel(updatedDonor);
-        donor.setPassword(encoder.encode(updatedDonor.getPassword()));
-        donorService.updateDonor(donor);
+        donorFacade.registerDonor(registeredDonor);
+        return ResponseEntity.ok(new MessageResponse("Donor registered successfully"));
+    }
+
+    @PostMapping("/editDonorProfile")
+    public ResponseEntity<?> editProfileForm(@RequestBody DonorDTO updatedDonor){
+        if(userFacade.findUserByUsername(updatedDonor.getUsername()) != null
+                && userFacade.findUserById(updatedDonor.getId())!=userFacade.findUserByUsername(updatedDonor.getUsername()) ){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already taken!"));
+        }
+        if(userFacade.findUserByEmail(updatedDonor.getEmail()) != null
+                && userFacade.findUserById(updatedDonor.getId())!=userFacade.findUserByEmail(updatedDonor.getEmail()) ){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already taken!"));
+        }
+        donorFacade.updateDonor(updatedDonor);
         return ResponseEntity.ok(new MessageResponse("Profile updated!"));
     }
 
-    @DeleteMapping("/deleteDonor{username}")
-    public ResponseEntity<?> deleteDonor(@PathVariable String username) {
-        appoitmentService.deleteUserAppoitments(donorService.findDonorByUsername(username));
-        donorService.deleteDonorById(donorService.findDonorByUsername(username).getId());
-        return ResponseEntity.ok(new MessageResponse("Account deleted!"));
-    }
 }

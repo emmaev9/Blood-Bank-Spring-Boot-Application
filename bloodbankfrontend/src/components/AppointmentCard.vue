@@ -103,8 +103,8 @@ export default {
   },
   computed: {
     currentUser() {
-      //return JSON.parse(localStorage.getItem("user"))
-      return this.$store.state.auth.user;
+      return JSON.parse(localStorage.getItem("user"))
+      //return this.$store.state.auth.user;
     }
   },
   methods: {
@@ -172,18 +172,10 @@ export default {
 
       AppointmentService.createAppointment(appointment)
         .then(
-          () => {
-            if(this.disabledDates.includes(this.date)){
-                 console.log(this.date + " not valid");
-                 this.message = "the maximum number of appointments has been reached for this day!"
-                 this.successful = true;
-                 this.loading = false;
-            }
-            else{
+          () => {      
               this.message = "Appointment successfully created!"
               this.successful = false;
               this.loading = false;
-            }
           },
           (error) => {
             this.message =
@@ -237,6 +229,21 @@ export default {
 
 .radio:checked::before {
   transform: scale(1);
+}
+.card {
+  margin-top: 10%;
+}
+.form-control:focus {
+  border-color: #ed0dfd;
+  box-shadow: 0 0 0 0.2rem rgba(253, 13, 173, 0.25);
+}
+.register-link {
+  color: #0D6EFD;
+  text-decoration: none;
+  margin-left: 5px;
+}
+.register-link:hover {
+  text-decoration: underline;
 }
 
 

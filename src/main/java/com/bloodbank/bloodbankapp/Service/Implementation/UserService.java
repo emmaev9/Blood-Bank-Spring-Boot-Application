@@ -1,8 +1,9 @@
-package com.bloodbank.bloodbankapp.Service;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import com.bloodbank.bloodbankapp.Entity.User;
 import com.bloodbank.bloodbankapp.Repository.RoleRepository;
 import com.bloodbank.bloodbankapp.Repository.UserRepository;
+import com.bloodbank.bloodbankapp.Service.IUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserRepository userRepository;
 

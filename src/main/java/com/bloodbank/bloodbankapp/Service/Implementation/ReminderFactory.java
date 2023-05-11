@@ -1,11 +1,8 @@
-package com.bloodbank.bloodbankapp.Reminder;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
-import com.bloodbank.bloodbankapp.Service.EmailService;
-import com.bloodbank.bloodbankapp.Service.SmsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bloodbank.bloodbankapp.Service.Reminder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class ReminderFactory {

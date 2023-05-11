@@ -97,6 +97,9 @@
                     </div>
 
                   </Form>
+                  <button @click="deleteAccount"  class="button-33" role="button">
+                    Delete account
+                  </button>
 
                   <div v-if="message" class="alert" :class="successful ? 'alert-success' : 'alert-danger'">
                     {{ message }}
@@ -119,6 +122,7 @@ import * as yup from "yup";
 import "primevue/resources/themes/soho-light/theme.css";  //theme   
 import "primevue/resources/primevue.min.css"; //core
 import "primeicons/primeicons.css"; //icons
+import DonorService from "../services/donor.service";
 
 export default {
   name: "EditDonorProfile",
@@ -189,6 +193,23 @@ export default {
     }
   },
   methods: {
+
+    deleteAccount(){
+        DonorService.deleteAccount(this.currentUser.id).then(
+          () => {
+            this.$store.dispatch("auth/logout");
+            this.$router.push("/LoginDonor");
+          },
+          (error) => {
+            this.message =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+          });
+    },
+
     handleEditProfile() {
       this.message = "";
       this.successful = false;
@@ -219,6 +240,7 @@ export default {
   
 <style scoped>
 @import url(../assets/styles/submit_button.css);
+@import url(../assets/styles/cancel_button.css);
 
 .error-feedback {
   color: red;

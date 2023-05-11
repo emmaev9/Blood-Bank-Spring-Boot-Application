@@ -1,13 +1,13 @@
-package com.bloodbank.bloodbankapp.Service;
+package com.bloodbank.bloodbankapp.Service.Implementation;
 
-import com.bloodbank.bloodbankapp.DTO.DoctorDTO;
+import com.bloodbank.bloodbankapp.DTO.Request.DoctorDTO;
 import com.bloodbank.bloodbankapp.Entity.*;
 import com.bloodbank.bloodbankapp.Repository.AppoitmentRepository;
 import com.bloodbank.bloodbankapp.Repository.DoctorRepository;
 import com.bloodbank.bloodbankapp.Repository.DonationCenterRepository;
 import com.bloodbank.bloodbankapp.Repository.UserRepository;
+import com.bloodbank.bloodbankapp.Service.IDoctorService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +16,20 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class DoctorService {
+public class DoctorService implements IDoctorService {
 
     private final DoctorRepository doctorRepository;
     private final UserRepository userRepository;
     private final AppoitmentRepository appoitmentRepository;
     private final RoleService roleService;
     private final DonationCenterRepository donationCenterRepository;
+    private final PasswordEncoder encoder;
 
     public void saveDoctor(Doctor doctor){
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(roleService.findRoleByName(ERole.DOCTOR));
         doctor.setRoles(roleSet);
+        doctor.setPassword(encoder.encode(doctor.getPassword()));
         doctorRepository.save(doctor);
     }
 
@@ -46,6 +48,10 @@ public class DoctorService {
         return doctorRepository.findDoctorByUsername(username);
     }
 
+    public boolean existDoctorById(Integer id){
+        return doctorRepository.existsById(id);
+    }
+
     @Transactional
     public void updateDoctor(DoctorDTO updatedDoctor){
 
@@ -59,19 +65,18 @@ public class DoctorService {
                 donationCenterRepository.findDonationCenterByName(updatedDoctor.getLocation().getName()));
     }
 
-    public Doctor findDoctorWithMinAppointments(){
+    public Doctor findDoctorWithMinAppointments(DonationCenter donationCenter){
         List<Doctor> doctorList = findAllDoctors();
         if(doctorList.isEmpty()){
             return null;
         }
-        if(doctorList.size() == 1){
-            return doctorList.get(0);
-        }
         Map.Entry<Doctor,Integer> min = null;
         Map<Doctor, Integer> doctorsAndNumberOfAppointments = new HashMap<>();
-        for(Doctor doctor: doctorList){
-            List<Appoitment> appointments = appoitmentRepository.getAppoitmentByDoctor(doctor);
-            doctorsAndNumberOfAppointments.put(doctor, appointments.size());
+        for(Doctor doctor: doctorList) {
+            List<Appoitment> appointments = appoitmentRepository.getAppoitmentsByDoctor(doctor);
+            if(doctor.getDonationCenter().equals(donationCenter)) {
+                doctorsAndNumberOfAppointments.put(doctor, appointments.size());
+            }
         }
         for (Map.Entry<Doctor, Integer> entry : doctorsAndNumberOfAppointments.entrySet()) {
             if (min == null || min.getValue() > entry.getValue()) {

@@ -31,4 +31,5 @@ public interface DonorRepository  extends JpaRepository<Donor, Integer> {
 
 
     Donor findDonorById(@Param("id") Integer id);
+    void delete(Donor donor);
 }
