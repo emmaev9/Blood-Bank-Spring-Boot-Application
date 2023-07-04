@@ -69,5 +69,8 @@ public class AppointmentFacade {
     public List<Date> getUnavailableDatesForLocation(Integer id){
         return appointmentService.nonAvailableDatesForAppointments(id);
     }
+    public String getBloodResult(Integer id){
+        return appointmentService.getBloodResult(id);
+    }
 }
 

@@ -23,4 +23,5 @@ public class DoctorAppointmentsDTO {
     private Doctor doctor;
     private String confirmed;
     private String date;
+    private String result;
 }

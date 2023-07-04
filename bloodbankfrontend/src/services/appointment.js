@@ -37,8 +37,18 @@ class AppointmentService {
     confirmAppointment(id){
       return axios.put(`${API_URL}confirmAppointment/${id}`);
     }
-    pagination(pageNo){
-      return axios.get(`${API_URL_DOCTOR}page/${pageNo}`);
+    pagination(pageNo, id){
+      return axios.get(`${API_URL_DOCTOR}page/${pageNo}/${id}`);
+    }
+    sendBloodTestResults(id,results){
+      console.log(results);
+      return axios.post(API_URL_DOCTOR + 'sendBloodTestResults', {
+        appointmentId: id,
+        result: results,
+      });
+    }
+    getResult(id){
+      return axios.get(`${API_URL}getBloodResults/${id}`);
     }
 
 }

@@ -22,7 +22,7 @@ public class DonorDTO {
     private String username;
     @NonNull
     private String email;
-    @NonNull
+    //@NonNull
     private String password;
     @NonNull
     private String phoneNumber;

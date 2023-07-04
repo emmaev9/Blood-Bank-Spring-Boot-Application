@@ -29,7 +29,7 @@
 
 
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                      <button role="button" class="button-333">
+                      <button role="button" class="button-222">
                         Login
                       </button>
                     </div>
@@ -138,7 +138,7 @@ export default {
 </script>
 
 <style>
-@import url(../assets/styles/submit_button.css);
+@import url(../assets/styles/update_button.css);
 
 
 .error-feedback {
@@ -149,5 +149,9 @@ export default {
   width: 100vh;
   height: 100vw;
   object-fit: contain;
+}
+.form-control:focus {
+  border-color: #ed0dfd;
+  box-shadow: 0 0 0 0.2rem rgba(253, 13, 173, 0.25);
 }
 </style>

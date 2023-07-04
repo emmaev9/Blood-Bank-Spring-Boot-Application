@@ -1,10 +1,10 @@
 <template>
   <br>
-  <div class="container text-center">
+  <div class="container text-center col-13">
     <div v-if="message" class="alert alert-success">
       {{ message }}
     </div>
-    <Card style="width: 25em">
+    <Card style="width: 25em" class="shadow-lg">
       <template #title> Make an appointment </template>
       <template #content>
 
@@ -46,7 +46,7 @@
 
 
           <div>
-            <button class="button-333" role="button">
+            <button @click="this.$emit('update', true)" class="button-222" role="button" type="submit">
               Submit
             </button>
           </div>
@@ -89,7 +89,7 @@ export default {
       selectedReminder: "",
       date: "",
       message: "",
-      updateListOfAppointments: "flase",
+      updateListOfAppointments: true,
       disabledBefore: null,
       disabledAfter: null,
       datesToDisable: [],
@@ -108,11 +108,6 @@ export default {
     }
   },
   methods: {
-    checkDate(date){
-      if(!this.disabledDates.includes(date)){
-        this.date = date;
-      }
-    },
 
     populateTable(){
       UserService.getDonorDonationCenters(this.currentUser.county).then(
@@ -153,17 +148,27 @@ export default {
 
     makeAppointment(appointment) {
       // console.log(this.date);
+      this.$emit('update', true)
       this.message = "";
       this.successful = false;
       this.loading = true;
-      this.updateListOfAppointments = "true";
+      let today = new Date();
+      let day = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
       console.log(this.selectedReminder);
+      console.log(day);
+      console.log(this.date);
+      day.setHours(0,0,0,0);
+      this.date.setHours(0,0,0,0);
       //this.date = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate() + 2);
-      let dateToSend = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate() + 2);
-    
-      this.$emit('myevent', this.updateListOfAppointments);
+      let dateToSend = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate());
+      if(dateToSend === day){
+        dateToSend = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate());
+      }
+      else{
+        dateToSend = new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(), this.date.getUTCDate()+2);
+      }
 
-      this.updateListOfAppointments = "false";
+      //
 
       appointment.location = this.selectedLocation;
       appointment.date = dateToSend;
@@ -176,6 +181,9 @@ export default {
               this.message = "Appointment successfully created!"
               this.successful = false;
               this.loading = false;
+              this.updateListOfAppointments = true;
+              this.$emit('update', true);
+              this.updateListOfAppointments = false;
           },
           (error) => {
             this.message =
@@ -207,7 +215,7 @@ export default {
 
 <style>
 
-@import url(../assets/styles/submit_button.css);
+@import url(../assets/styles/update_button.css);
 
 .radio {
   /* ...existing styles */
@@ -244,6 +252,20 @@ export default {
 }
 .register-link:hover {
   text-decoration: underline;
+}
+.title {
+  font-family: "Roboto Slab", serif;
+  font-style:bold;
+  font-stretch: condensed;
+  font-size: 30px;
+  color:  #53008e !important; 
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 25px;
+}
+.bg-danger {
+  background-color:#b8a5e1 !important;
+  color: white;
 }
 
 

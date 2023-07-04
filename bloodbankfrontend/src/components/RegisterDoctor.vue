@@ -93,7 +93,7 @@
                     {{ message }}
                     <div>
                       <router-link to="/AdminHome" class="register-link">
-                        <button type="submit" role="button" class="button-333">Back to home page</button>
+                        <button type="submit" role="button" class="button-222">Back to home page</button>
                       </router-link>
                     </div>
 
@@ -220,7 +220,7 @@ export default {
 </script>
   
 <style scoped>
-@import url(../assets/styles/submit_button.css);
+@import url(../assets/styles/update_button.css);
 .error-feedback {
   color: red;
   font-size: 0.8rem;

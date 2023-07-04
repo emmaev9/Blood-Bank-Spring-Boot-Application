@@ -40,16 +40,18 @@ public class Appoitment {
 
     private String reminderType;
 
+    private String bloodTestResult;
 
     // Constructors
 
-    public Appoitment(Donor donor, Doctor doctor, DonationCenter donationCenter, boolean confirmed, Date date, String reminderType) {
+    public Appoitment(Donor donor, Doctor doctor, DonationCenter donationCenter, boolean confirmed, Date date, String reminderType, String bloodTypeResult) {
         this.donor = donor;
         this.doctor = doctor;
         this.donationCenter = donationCenter;
         this.confirmed = confirmed;
         this.date = date;
         this.reminderType = reminderType;
+        this.bloodTestResult = bloodTypeResult;
     }
 
 }

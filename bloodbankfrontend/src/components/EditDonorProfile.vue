@@ -6,7 +6,7 @@
           <div class="card text-black  shadow-lg p-3 mb-5 bg-white rounded">
             <div class="card-body">
               <div class="row justify-content-center">
-                <div class="col-md-10">
+                <div class="col-md-9">
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Update Profile</p>
 
                   <Form @submit="handleEditProfile" :validation-schema="schema" class="mx-1 mx-md-4">
@@ -62,7 +62,7 @@
                           <ErrorMessage name="phoneNumber" class="error-feedback" />
                         </div>
                       </div>
-
+                      <!--
                       <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
@@ -71,7 +71,7 @@
                           </Field>
                           <ErrorMessage name="password" class="error-feedback" />
                         </div>
-                      </div>
+                      </div>  -->
 
                       <div class="d-flex flex-row align-items-center mb-4">
                         <i class="fas fa-key fa-lg me-3 fa-fw"></i>
@@ -90,16 +90,17 @@
                       </div>
 
                       <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <button class="button-333" role="button">
+                        <button class="button-222" role="button">
                           Update
+                        </button>
+                        <button @click="this.deleteAccount"  class="button-33" role="button">
+                          Delete account
                         </button>
                       </div>
                     </div>
 
                   </Form>
-                  <button @click="deleteAccount"  class="button-33" role="button">
-                    Delete account
-                  </button>
+                  
 
                   <div v-if="message" class="alert" :class="successful ? 'alert-success' : 'alert-danger'">
                     {{ message }}
@@ -147,11 +148,11 @@ export default {
         .required("Email is required!")
         .email("Email is invalid!")
         .max(50, "Must be maximum 50 characters!"),
-      password: yup
+     /* password: yup
         .string()
         .required("Password is required!")
         .min(6, "Must be at least 6 characters!")
-        .max(40, "Must be maximum 40 characters!"),
+        .max(40, "Must be maximum 40 characters!"),*/
       lastName: yup
         .string()
         .required("Last Name is required!"),
@@ -196,7 +197,8 @@ export default {
 
     deleteAccount(){
         DonorService.deleteAccount(this.currentUser.id).then(
-          () => {
+          (response) => {
+            this.message = response.data.message;
             this.$store.dispatch("auth/logout");
             this.$router.push("/LoginDonor");
           },
@@ -241,6 +243,8 @@ export default {
 <style scoped>
 @import url(../assets/styles/submit_button.css);
 @import url(../assets/styles/cancel_button.css);
+@import url(../assets/styles/update_button.css);
+
 
 .error-feedback {
   color: red;

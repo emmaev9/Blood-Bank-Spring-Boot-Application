@@ -2,7 +2,7 @@
   <section class="vh-100" style="background-color:white;">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-6 col-sm-11">
+        <div class="col-lg-6 col-sm-9">
           <div class="card text-black  shadow-lg p-3 mb-5 bg-white rounded">
             <div class="card-body">
               <div class="row justify-content-center">
@@ -83,7 +83,7 @@
             </div>
 
             <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-              <button class="button-333" role="button">
+              <button class="button-222" role="button">
                 Register
               </button>
             </div>
@@ -219,7 +219,7 @@ export default {
 </script>
   
 <style scoped>
-@import url(../assets/styles/submit_button.css);
+@import url(../assets/styles/update_button.css);
 
 .error-feedback {
   color: red;

@@ -27,6 +27,7 @@ public class DoctorMapper {
         doctor.setPassword(doctorDTO.getPassword());
         doctor.setId(doctorDTO.getId());
         doctor.setCNP(doctorDTO.getCnp());
+        System.out.println(doctor);
         return  doctor;
     }
 

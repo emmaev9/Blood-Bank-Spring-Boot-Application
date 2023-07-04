@@ -23,8 +23,8 @@ class UserService {
       });
   }
 
-  getDoctorHome() {
-    return axios.get(API_URL_DOCTOR + 'doctorHome', { headers: authHeader() });
+  getDoctorHome(id) {
+    return axios.get(API_URL_DOCTOR + `doctorHome/${id}`);
   }
 }
 

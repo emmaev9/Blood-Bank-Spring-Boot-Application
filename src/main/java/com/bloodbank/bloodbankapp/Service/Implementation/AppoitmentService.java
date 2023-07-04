@@ -44,6 +44,7 @@ public class AppoitmentService implements IAppointmentService {
         newAppointment.setConfirmed(false);
         newAppointment.setDoctor(doctor);
         newAppointment.setReminderType(appointmentDTO.getReminderType());
+        newAppointment.setBloodTestResult("");
         //System.out.println(newAppointment);
 
         String message = "Hello " + donor.getFirstName()+  ",\n" + "\nYou successfully registered for blood donation via BloodBank application!" +
@@ -90,10 +91,10 @@ public class AppoitmentService implements IAppointmentService {
         return nonavailableDates;
     }
 
-    public Page<Appoitment> getAllAppointments(int pageNo, int pageSize)
+    public Page<Appoitment> getAllAppointments(int pageNo, int pageSize, Integer doctorId)
     {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return appoitmentRepository.findAll(pageable);
+        return appoitmentRepository.findAllPagesByDoctorId(pageable, doctorId);
     }
     public List<Appoitment> findNextDayAppointments(){
         final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
@@ -109,6 +110,12 @@ public class AppoitmentService implements IAppointmentService {
 
     public List<Appoitment> findAppointmentsByDoctorUsername(String username){
         return appoitmentRepository.findAppoitmentsByDoctor_Username(username);
+    }
+    public void updateAppointmentResult(String result, Integer id){
+        appoitmentRepository.updateAppointment(result,id);
+    }
+    public String getBloodResult(Integer id){
+        return appoitmentRepository.findAppoitmentById(id).getBloodTestResult();
     }
 
     public Date setTimeToMidnight(Date date) {

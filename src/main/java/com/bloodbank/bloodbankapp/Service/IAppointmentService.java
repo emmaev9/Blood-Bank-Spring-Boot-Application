@@ -15,9 +15,11 @@ public interface IAppointmentService {
     List<Appoitment> findAllDoctorAppointments(Doctor doctor);
     Appoitment findById(Integer id);
     List<Date> nonAvailableDatesForAppointments(Integer id);
-    Page<Appoitment> getAllAppointments(int pageNo, int pageSize);
+    Page<Appoitment> getAllAppointments(int pageNo, int pageSize, Integer doctorId);
     List<Appoitment> findNextDayAppointments();
     List<Appoitment> findAppointmentsByDonorUsername(String username);
     List<Appoitment> findAppointmentsByDoctorUsername(String username);
     Date setTimeToMidnight(Date date);
+    void updateAppointmentResult(String result, Integer id);
+    String getBloodResult(Integer id);
 }

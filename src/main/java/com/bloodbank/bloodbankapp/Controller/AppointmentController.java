@@ -62,5 +62,9 @@ public class AppointmentController {
        appointmentFacade.confirmAppointment(id);
         return ResponseEntity.ok(new MessageResponse("Appointment confirmed"));
     }
+    @GetMapping("/getBloodResults/{id}")
+    public ResponseEntity<?> getBloodResults(@PathVariable(value="id")Integer id){
+        return ResponseEntity.ok(appointmentFacade.getBloodResult(id));
+    }
 
 }

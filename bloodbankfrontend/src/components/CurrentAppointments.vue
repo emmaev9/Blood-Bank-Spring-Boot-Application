@@ -5,19 +5,21 @@
     {{message}}
   </div>
 
-  <div>
-    <h2 class="title">List of appointments</h2>
+  <div class="container text-center col-10">
+    <h2 class="title">History of appointments</h2>
   </div>
-  <div class="container text-center">
+  <hr class="container text-center col-10">
+  <div class="container text-center col-10 ">
 
     <div>
-      <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+      <table class="table table-striped table-bordered table-sm shadow-lg rounded">
+        <thead>
           <tr>
-            <th>Donation Center</th>
-            <th>Address</th>
-            <th>Date</th>
-            <th>Confirmed</th>
+            <th class="bg-danger bg-gradient">Donation Center</th>
+            <th class="bg-danger bg-gradient">Address</th>
+            <th class="bg-danger bg-gradient">Date</th>
+       
+            <th class="bg-danger bg-gradient">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -25,12 +27,14 @@
             <td> {{ item.donationCenter }}</td>
             <td> {{ item.address }}</td>
             <td> {{ item.date }}</td>
-            <td> {{ item.confirmed }}</td>
+         
             <td>
-              <button @click="deleteSelectedAppointment(item.id)" class="button-33" role="button">
+              <button v-if="!showResults(item.result)" @click="deleteSelectedAppointment(item.id)" class="button-33" role="button">
                   Cancel
-                
               </button>
+              <button v-if="showResults(item.result)" @click="this.seeResults(item.id, item.result)" class="button-333" role="button">
+                  Result
+             </button>
           </td>
           </tr>
         </tbody>
@@ -48,9 +52,8 @@ export default {
   name: "CurrentAppointments",
 
   props: {
-    updateTable: {
-      type: String,
-      default: "true"
+    updateTable:{
+      type: Boolean,
     }
   },
 
@@ -76,6 +79,20 @@ export default {
         }
       )
     },
+    showResults(result){
+      if(result == ""){
+        return false;
+      }
+      return true;
+    },
+    
+    seeResults(id,result){
+      console.log(id)
+      localStorage.setItem('appointmentId', JSON.stringify(id));
+      this.$emit('add', true);
+     // console.log(result);
+      this.$emit('result', result);
+    },
     refreshTable(){
       AppointmentService.getCurrentAppointments(this.currentUser.username).then(
           (response) => {
@@ -94,9 +111,11 @@ export default {
 
 
   watch: {
-    updateTable: function () {
-      if (this.updateTable == "true") {
-        this.refreshTable();
+    updateTable: {
+      immediate: true, // call handler immediately with current value
+      deep:true,
+      handler(){
+        this.refreshTable()
       }
     }
   },
@@ -108,9 +127,20 @@ export default {
 </script>
 <style>
 @import url(../assets/styles/cancel_button.css);
+@import url(../assets/styles/update_button.css);
+
 .title {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
+  font-family: "Roboto Slab", serif;
+  font-style:bold;
   font-stretch: condensed;
+  font-size: 30px;
+  color:  #53008e !important; 
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 25px;
+}
+.bg-danger {
+  background-color:#b8a5e1 !important;
+  color: white;
 }
 </style>

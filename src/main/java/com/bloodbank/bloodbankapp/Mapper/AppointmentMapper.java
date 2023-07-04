@@ -4,6 +4,7 @@ import com.bloodbank.bloodbankapp.DTO.Request.AppointmentDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.DoctorAppointmentsDTO;
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
 import com.bloodbank.bloodbankapp.Entity.Doctor;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,6 +22,8 @@ public class AppointmentMapper {
         }
         doctorAppointmentsDTO.setId(appoitment.getId());
         doctorAppointmentsDTO.setDate(appoitment.getDate().toString().substring(0,10));
+        System.out.println(appoitment.getBloodTestResult());
+        doctorAppointmentsDTO.setResult(appoitment.getBloodTestResult());
         return doctorAppointmentsDTO;
     }
     public AppointmentDTO entityToDto(Appoitment appoitment){
@@ -32,6 +35,8 @@ public class AppointmentMapper {
         appoitmentDTO.setId(appoitment.getId());
         appoitmentDTO.setAddress(address);
         appoitmentDTO.setDonationCenter(appoitment.getDonationCenter().getName());
+        appoitmentDTO.setResult(appoitment.getBloodTestResult());
+        System.out.println(appoitment.getBloodTestResult());
         if(appoitment.isConfirmed()){
             appoitmentDTO.setConfirmed("YES");
         }

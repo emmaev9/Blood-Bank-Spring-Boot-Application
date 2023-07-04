@@ -1,5 +1,6 @@
 package com.bloodbank.bloodbankapp.Facade;
 
+import com.bloodbank.bloodbankapp.DTO.Request.BloodResultsDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.DoctorDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.PaginationDTO;
 import com.bloodbank.bloodbankapp.Entity.Appoitment;
@@ -42,9 +43,9 @@ public class DoctorFacade {
         Doctor doctor = doctorService.findDoctorByUsername(username);
         return appointmentService.findAllDoctorAppointments(doctor);
     }
-    public PaginationDTO getPagination(int pageNo){
+    public PaginationDTO getPagination(int pageNo, Integer doctorId){
         int pageSize = 5;
-        Page<Appoitment> page = appointmentService.getAllAppointments(pageNo, pageSize);
+        Page<Appoitment> page = appointmentService.getAllAppointments(pageNo, pageSize,doctorId);
         List<Appoitment> listAppointment = page.getContent();
         return new PaginationDTO(pageNo, page.getTotalPages(), page.getTotalElements(), listAppointment);
     }
@@ -67,6 +68,9 @@ public class DoctorFacade {
             appointmentService.deleteAppointmentById(appoitment.getId());
         }
         doctorService.deleteDoctorById(id);
+    }
+    public void sendResults(BloodResultsDTO bloodResultsDTO) {
+        appointmentService.updateAppointmentResult(bloodResultsDTO.getResult(), bloodResultsDTO.getAppointmentId());
     }
 
 

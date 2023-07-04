@@ -1,5 +1,6 @@
 package com.bloodbank.bloodbankapp.Controller;
 
+import com.bloodbank.bloodbankapp.DTO.Request.BloodResultsDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.DoctorDTO;
 import com.bloodbank.bloodbankapp.DTO.Request.PaginationDTO;
 import com.bloodbank.bloodbankapp.DTO.Response.MessageResponse;
@@ -20,14 +21,18 @@ public class DoctorController {
     private final DoctorFacade doctorFacade;
     private final UserFacade userFacade;
 
-    @GetMapping("/doctorHome")
-    public ResponseEntity<?> doctorHome(){
-        return ResponseEntity.ok(findPaginated(1));
+    @GetMapping("doctorHome/{id}")
+    public ResponseEntity<?> doctorHome(@PathVariable(value="id") Integer id){
+        return ResponseEntity.ok(findPaginated(1, id));
     }
 
-    @GetMapping("/page/{pageNo}")
-    public ResponseEntity<?> findPaginated( @PathVariable(value = "pageNo") int pageNo) {
-        PaginationDTO paginationDTO = doctorFacade.getPagination(pageNo);
+    @GetMapping("page/{pageNo}/{id}")
+    public ResponseEntity<?> findPaginated( @PathVariable(value = "pageNo") int pageNo,
+                                            @PathVariable(value="id") Integer id) {
+        System.out.println("A ajuns");
+        PaginationDTO paginationDTO = doctorFacade.getPagination(pageNo,id);
+        System.out.println(paginationDTO);
+        System.out.println("A iesit");
         return ResponseEntity.ok(paginationDTO);
     }
 
@@ -38,6 +43,14 @@ public class DoctorController {
         }else{
             return ResponseEntity.badRequest().body(new MessageResponse("Doctor with id " + id + " was not found"));
         }
+    }
+    @Transactional
+    @PostMapping("/sendBloodTestResults")
+    public ResponseEntity<?>sendResults(@RequestBody BloodResultsDTO bloodResultsDTO){
+        System.out.println(bloodResultsDTO.getResult());
+        System.out.println(bloodResultsDTO.getAppointmentId());
+        doctorFacade.sendResults(bloodResultsDTO);
+        return ResponseEntity.ok(new MessageResponse("Results sent!"));
     }
 
     @GetMapping("/getDoctorAppointments")

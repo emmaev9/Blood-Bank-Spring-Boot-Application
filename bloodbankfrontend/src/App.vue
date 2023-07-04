@@ -3,7 +3,7 @@
 
   </div>
  <div id="app">
-    <nav class="navbar navbar-expand shadow" style="background-color:transparent;">
+    <nav class="navbar navbar-expand shadow fixed-top" style="background-color:white;">
       
       <div v-if="!currentUser" class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -105,8 +105,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
 }
+
 .bg-img{
   width: 100vh;
   height: 100vw;
@@ -116,5 +117,19 @@ export default {
   left:0;
   z-index:-1;
   position: absolute
+}
+.navbar{
+  height: 40px;
+  font-size: 15px;
+  font-weight: bold;
+  background-color:#b8a5e1 !important;
+  
+  color:rgb(255, 254, 254);
+  text-align: left;
+  padding-left: 20px;
+  padding-right: 20px;
+  opacity: 0.9;
+
+
 }
 </style>

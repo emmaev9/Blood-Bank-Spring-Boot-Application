@@ -27,8 +27,8 @@ public class DonorController {
         return "editProfile";
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteDonor(@PathVariable Integer id){
+    @PostMapping(value = "/delete/{id}")
+    public ResponseEntity<?> deleteDonor(@PathVariable(value="id") Integer id){
         donorFacade.deleteDonor(id);
         return ResponseEntity.ok().body(new MessageResponse("Account successfully deleted!"));
     }

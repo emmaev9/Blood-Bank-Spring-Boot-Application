@@ -12,8 +12,14 @@ class DonorService {
 
   editProfile(user) {
     console.log(user);
+    user.password = "123456";
     return axios.post(API_URL_DONOR + "editDonorProfile", user )
   }
+  deleteAccount(id){
+    console.log(id);
+    return axios.post(`${API_URL_DONOR}delete/${id}`);
+  }
+
 }
 
 export default new DonorService();

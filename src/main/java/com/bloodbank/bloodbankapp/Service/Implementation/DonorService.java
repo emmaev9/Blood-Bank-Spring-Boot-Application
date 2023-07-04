@@ -40,12 +40,13 @@ public class DonorService implements IDonorService {
 
     @Transactional
     public void updateDonor(Donor updatedDonor){
-         updatedDonor.setPassword(encoder.encode(updatedDonor.getPassword()));
+         updatedDonor.setPassword(encoder.encode(donorRepository.findDonorByUsername(updatedDonor.getUsername()).getPassword()));
          donorRepository.updateDonor(donorRepository.findDonorByUsername(updatedDonor.getUsername()).getId(),
                                           updatedDonor.getFirstName(), updatedDonor.getLastName(),
                                           updatedDonor.getEmail(), updatedDonor.getCounty(),
-                                          updatedDonor.getPassword(), updatedDonor.getUsername(),
-                                          updatedDonor.getBloodType(),
+                 updatedDonor.getUsername(),
+                 updatedDonor.getBloodType(),
+
                                           updatedDonor.getPhoneNumber());
     }
     public void deleteDonor(Integer donorId){

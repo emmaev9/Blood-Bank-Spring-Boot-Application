@@ -4,20 +4,20 @@
   <div v-if="message" class="alert alert-success">
     {{ message }}
   </div>
-
-  <div>
+  <div  class="container col-10">
     <h2 class="title">List of doctors</h2>
   </div>
-  <div class="container text-center">
-
+  <hr class="hr-class container col-10">
+  <div class="container col-10">
+    <hr/>
     <div>
-      <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+      <table class="table table-striped table-bordered shadow-lg table-sm border-top">
+        <thead>
           <tr>
-            <th>First Name </th>
-            <th>Last Name </th>
-            <th>Donation center</th>
-            <th>Actions</th>
+            <th class="bg-danger bg-gradient">First Name </th>
+            <th class="bg-danger bg-gradient">Last Name </th>
+            <th class="bg-danger bg-gradient">Donation center</th>
+            <th class="bg-danger bg-gradient">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -103,9 +103,23 @@ export default {
 @import url(../assets/styles/submit_button.css);
 @import url(../assets/styles/cancel_button.css);
 @import url(../assets/styles/update_button.css);
+
 .title {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
+  font-family: "Roboto Slab", serif;
+  font-style:bold;
   font-stretch: condensed;
+  font-size: 30px;
+  color:  #53008e !important; 
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 25px;
+}
+.bg-danger {
+  background-color:#b8a5e1 !important;
+  color: white;
+}
+.hr-class{
+  color:#53008e;
+  font-weight: bold;
 }
 </style>

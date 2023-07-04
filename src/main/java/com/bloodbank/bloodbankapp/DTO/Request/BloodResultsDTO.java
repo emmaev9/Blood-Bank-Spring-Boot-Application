@@ -7,13 +7,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentDTO {
-    private Integer id;
-    private String address;
-    private String donationCenter;
-    private String confirmed;
-    private String date;
+@NoArgsConstructor
+public class BloodResultsDTO {
+    private Integer appointmentId;
     private String result;
 }
