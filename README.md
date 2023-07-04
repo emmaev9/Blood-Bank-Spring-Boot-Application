@@ -12,6 +12,7 @@ Diagrama de mai jos ilustrează toate cazurile de utilizare ale aplicției, avâ
 * Doctorul -  un utilizator care are rolul de a confirma donările și de a trimite rezultatele acestora. Doctorul interacționează cu aplicația pentru a accesa informațiile necesare și a înregistra rezultatele donărilor.
 * Donatorul - un utilizator care are rolul de a face programări pentru donări, de a vedea rezultatele donărilor anterioare și de vizualiza situatia centrelor de donare. Donatorul utilizează aplicația pentru a programa donările și a obține informații actualizate despre rezultatele analizelor.
 * Adminul - un utilizator cu drepturi administrative, responsabil de gestionarea datelor din sistem. Adminul poate efectua operații CRUD (creare, citire, actualizare, ștergere) pe conturile doctorilor.
+<img src="/images/usecase.png" width="450" height="400">
 
 
 ## Tehnologii utilizate
